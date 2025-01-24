@@ -6,16 +6,22 @@ import LoanRequest from '../components/LoanRequest';
 const BookPage = () => {
   const { id } = useParams();
   const [book, setBook] = useState<any | null>(null);
-  const [isLoaned, setIsLoaned] = useState(false);  // Track loan status
+  const [isLoaned, setIsLoaned] = useState(false);
 
   useEffect(() => {
     const fetchBook = async () => {
       try {
         const response = await api.get(`/books/${id}`);
         setBook(response.data);
-        // Check if the book is loaned out by looking for loans with pending/accepted status
-        const loanResponse = await api.get(`/loans/${id}`);
-        setIsLoaned(loanResponse.data.some((loan: any) => loan.status !== "rejected"));
+        console.log("Fetched Book:", response.data); // Debugging
+
+        // Fetch loan details
+        try {
+          const loanResponse = await api.get(`/loans/${id}`);
+          setIsLoaned(loanResponse.data.some((loan: any) => loan.status !== "rejected"));
+        } catch (error) {
+          console.error("Error fetching loan details", error);
+        }
       } catch (error) {
         console.error("Error fetching book details", error);
       }
