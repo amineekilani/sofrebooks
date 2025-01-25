@@ -19,6 +19,7 @@ const Login = () => {
 
   return (
     <form onSubmit={handleSubmit}>
+      <h2>Login</h2>
       <input
         type="email"
         placeholder="Email"
@@ -32,6 +33,9 @@ const Login = () => {
         onChange={(e) => setPassword(e.target.value)}
       />
       <button type="submit">Login</button>
+      <p>
+        You don't have an account? <a href="/Register">Register here</a>.
+      </p>
     </form>
   );
 };

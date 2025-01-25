@@ -1,20 +1,26 @@
 import express from "express";
+import { Request, Response, NextFunction } from "express";
 import Book from "../models/Book";
 import asyncHandler from "express-async-handler";
 import { authenticate } from "../middleware/auth"; // Import middleware
 
 const router = express.Router();
 
-// Protect routes with authenticate middleware
+//add
 router.post(
   "/",
   authenticate,
-  asyncHandler(async (req, res) => {
+  async (req: Request, res: Response) => {
     const { title, author } = req.body;
-    const book = new Book({ title, author, owner: req.userId }); // Use userId from request
+
+    if (!req.userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const book = new Book({ title, author, owner: req.userId });
     await book.save();
     res.status(201).json(book);
-  })
+  }
 );
 
 //  Obtenir tous les livres
