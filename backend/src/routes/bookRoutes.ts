@@ -4,7 +4,7 @@ import { protect } from "../middleware/authMiddleware";
 
 const router = express.Router();
 
-router.get("/", getBooks);
+router.get("/", protect, getBooks);
 
 router.post("/", protect, addBook);
 router.put("/:id", protect, updateBook);

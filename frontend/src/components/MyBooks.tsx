@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import { getBooks, addBook, updateBook, deleteBook } from "../services/BookService";
 
 const MyBooks = () => {
-  const [books, setBooks] = useState([]);
+  const [books, setBooks] = useState<any[]>([]);
   const [newBook, setNewBook] = useState({ title: "", author: "", category: "" });
+  const [showForm, setShowForm] = useState(false);
+  const [editingBook, setEditingBook] = useState<any>(null);
 
   useEffect(() => {
     fetchBooks();
@@ -23,9 +25,23 @@ const MyBooks = () => {
     try {
       await addBook(newBook);
       setNewBook({ title: "", author: "", category: "" });
+      setShowForm(false); // Cacher le formulaire après ajout
       fetchBooks();
     } catch (error) {
       console.error("Error adding book", error);
+    }
+  };
+
+  const handleUpdateBook = async () => {
+    if (!newBook.title || !newBook.author || !newBook.category) return;
+    try {
+      await updateBook(editingBook._id, newBook);
+      setNewBook({ title: "", author: "", category: "" });
+      setEditingBook(null);
+      setShowForm(false); // Cacher le formulaire après mise à jour
+      fetchBooks();
+    } catch (error) {
+      console.error("Error updating book", error);
     }
   };
 
@@ -38,38 +54,57 @@ const MyBooks = () => {
     }
   };
 
+  const handleEdit = (book: any) => {
+    setEditingBook(book);
+    setNewBook({ title: book.title, author: book.author, category: book.category });
+    setShowForm(true); // Afficher le formulaire de modification
+  };
+
   return (
     <div>
       <h1>My Books</h1>
-      <div>
-        <input
-          type="text"
-          placeholder="Title"
-          value={newBook.title}
-          onChange={(e) => setNewBook({ ...newBook, title: e.target.value })}
-        />
-        <input
-          type="text"
-          placeholder="Author"
-          value={newBook.author}
-          onChange={(e) => setNewBook({ ...newBook, author: e.target.value })}
-        />
-        <input
-          type="text"
-          placeholder="Category"
-          value={newBook.category}
-          onChange={(e) => setNewBook({ ...newBook, category: e.target.value })}
-        />
-        <button onClick={handleAddBook}>Add Book</button>
-      </div>
+      <button onClick={() => setShowForm(!showForm)}>
+        {showForm ? "Annuler" : "Ajouter un livre"}
+      </button>
+
+      {showForm && (
+        <div>
+          <input
+            type="text"
+            placeholder="Title"
+            value={newBook.title}
+            onChange={(e) => setNewBook({ ...newBook, title: e.target.value })}
+          />
+          <input
+            type="text"
+            placeholder="Author"
+            value={newBook.author}
+            onChange={(e) => setNewBook({ ...newBook, author: e.target.value })}
+          />
+          <input
+            type="text"
+            placeholder="Category"
+            value={newBook.category}
+            onChange={(e) => setNewBook({ ...newBook, category: e.target.value })}
+          />
+          <button onClick={editingBook ? handleUpdateBook : handleAddBook}>
+            {editingBook ? "Mettre à jour" : "Confirmer"}
+          </button>
+        </div>
+      )}
 
       <ul>
-        {books.map((book: any) => (
-          <li key={book._id}>
-            {book.title} - {book.author} - {book.category}
-            <button onClick={() => handleDelete(book._id)}>Delete</button>
-          </li>
-        ))}
+        {books.length > 0 ? (
+          books.map((book) => (
+            <li key={book._id}>
+              {book.title} - {book.author} - {book.category}
+              <button onClick={() => handleEdit(book)}>Modifier</button>
+              <button onClick={() => handleDelete(book._id)}>Supprimer</button>
+            </li>
+          ))
+        ) : (
+          <p>Aucun livre trouvé.</p>
+        )}
       </ul>
     </div>
   );

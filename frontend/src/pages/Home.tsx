@@ -15,6 +15,7 @@ function Home() {
     <div>
       <Navbar />
       <h1>Welcome to the Home Page</h1>
+      <input type="search" placeholder="Search for books" />
     </div>
   );
 }

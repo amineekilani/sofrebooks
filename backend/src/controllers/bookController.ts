@@ -21,6 +21,8 @@ export const addBook = async (req: AuthRequest, res: Response) : Promise<any> =>
       owner: req.user._id,
     });
     await newBook.save();
+    req.user.booksOwned.push(newBook._id);
+    await req.user.save();
     res.status(201).json(newBook);
   } catch (error) {
     res.status(500).json({ message: "Error adding book" });
