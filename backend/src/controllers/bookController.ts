@@ -4,6 +4,15 @@ import { AuthRequest } from "../middleware/authMiddleware";
 
 export const getBooks = async (req: AuthRequest, res: Response) : Promise<any> => {
   try {
+    const books = await Book.find();
+    res.json(books);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching books" });
+  }
+};
+
+export const getBooksByUser = async (req: AuthRequest, res: Response) : Promise<any> => {
+  try {
     const books = await Book.find({ owner: req.user._id });
     res.json(books);
   } catch (error) {

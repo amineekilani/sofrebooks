@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getBooks, addBook, updateBook, deleteBook } from "../services/BookService";
+import { addBook, updateBook, deleteBook, getBooksByUser } from "../services/BookService";
 
 const MyBooks = () => {
   const [books, setBooks] = useState<any[]>([]);
@@ -13,7 +13,7 @@ const MyBooks = () => {
 
   const fetchBooks = async () => {
     try {
-      const data = await getBooks();
+      const data = await getBooksByUser();
       setBooks(data);
     } catch (error) {
       console.error("Error fetching books", error);
