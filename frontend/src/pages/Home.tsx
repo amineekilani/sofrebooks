@@ -1,46 +1,22 @@
-import React, { useState } from 'react';
-import api from '../services/api';
-import { Link } from 'react-router-dom';
+import { useContext, useEffect } from "react";
+import { AuthContext } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
 
-const Home = () => {
-  const [search, setSearch] = useState('');
-  const [books, setBooks] = useState<any[]>([]);
+function Home() {
+  const { user } = useContext(AuthContext)!;
+  const navigate = useNavigate();
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const response = await api.get(`/books?search=${search}`);
-      setBooks(response.data);
-    } catch (error) {
-      console.error("Error fetching books", error);
-    }
-  };
+  useEffect(() => {
+    if (!user) navigate("/");
+  }, [user, navigate]);
 
   return (
     <div>
-      <h1>Search for Books</h1>
-      <form onSubmit={handleSearch}>
-        <input
-          type="text"
-          placeholder="Search by title or author"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <button type="submit">Search</button>
-      </form>
-
-      <div>
-        {books.map((book) => (
-          <div key={book._id}>
-            <h3>
-              <Link to={`/book/${book._id}`}>{book.title}</Link>
-            </h3>
-            <p>Author: {book.author}</p>
-          </div>
-        ))}
-      </div>
+      <Navbar />
+      <h1>Welcome to the Home Page</h1>
     </div>
   );
-};
+}
 
 export default Home;

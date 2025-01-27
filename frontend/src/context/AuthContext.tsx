@@ -1,55 +1,55 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
-import api from "../services/api";
+import { createContext, useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
+interface User {
+  _id: string;
+  name: string;
+  email: string;
+}
 
 interface AuthContextType {
-  user: { userId: string; token: string } | null;
+  user: User | null;
   login: (email: string, password: string) => Promise<void>;
+  register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
 }
 
-const AuthContext = createContext<AuthContextType | null>(null);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<{ userId: string; token: string } | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("userId");
-
-    if (token && userId) {
-      setUser({ userId, token });
-      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    }
+    axios.get("http://localhost:5000/api/auth/me", { withCredentials: true })
+      .then(res => setUser(res.data))
+      .catch(() => setUser(null));
   }, []);
 
   const login = async (email: string, password: string) => {
-    const response = await api.post("/users/login", { email, password });
-    const { token, userId } = response.data;
+    const res = await axios.post("http://localhost:5000/api/auth/login", { email, password }, { withCredentials: true });
+    setUser(res.data);
+    navigate("/home");
+  };
 
-    localStorage.setItem("token", token);
-    localStorage.setItem("userId", userId);
-    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    setUser({ userId, token });
+  const register = async (name: string, email: string, password: string) => {
+    const res = await axios.post("http://localhost:5000/api/auth/register", { name, email, password }, { withCredentials: true });
+    setUser(res.data);
+    navigate("/home");
   };
 
   const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
-    delete api.defaults.headers.common["Authorization"];
-    setUser(null);
+    axios.post("http://localhost:5000/api/auth/logout", {}, { withCredentials: true })
+      .then(() => {
+        setUser(null);
+        navigate("/");
+      });
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
-};
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
 };
