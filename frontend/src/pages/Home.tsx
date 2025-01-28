@@ -58,7 +58,7 @@ function Home() {
   return (
     <div>
       <Navbar />
-      <h1>Welcome to the Home Page</h1>
+      <h1>Welcome to SofreBooks</h1>
       <input
         type="search"
         placeholder="Search for books"

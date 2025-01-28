@@ -54,6 +54,8 @@ export const getLoanRequestsForOwner = async (req: AuthRequest, res: Response) =
 export const acceptLoanRequest = async (req: AuthRequest, res: Response) : Promise<any> => {
     try {
       const { requestId } = req.params;
+      const { bookId } = req.body;
+      const userId = req.user._id; // Borrower (logged-in user)
   
       // Find the loan request by ID
       const loanRequest = await LoanRequest.findById(requestId);
@@ -63,9 +65,14 @@ export const acceptLoanRequest = async (req: AuthRequest, res: Response) : Promi
       /*if (loanRequest.book.owner.toString() !== req.user._id.toString()) {
         return res.status(403).json({ message: "You are not authorized to accept this request" });
       }*/
-  
+      const book = await Book.findById(bookId).populate("owner");
+      if (!book) return res.status(404).json({ message: "Book not found" });
       // Update the loan request status to 'approved'
+      
+      
       loanRequest.status = "approved";
+      book.isAvailable = false;
+      req.user.loans.push(book);
       await loanRequest.save();
   
       res.json({ message: "Loan request approved" });
