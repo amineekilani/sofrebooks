@@ -19,12 +19,17 @@ export const addBook = async (bookData: { title: string; author: string; categor
   return response.data;
 };
 
-export const updateBook = async (id: string, updatedData: { title: string; author: string }) => {
+export const updateBook = async (id: string, updatedData: { title: string; author: string; category: string }) => {
   const response = await api.put(`${API_URL}/${id}`, updatedData, { withCredentials: true });
   return response.data;
 };
 
 export const deleteBook = async (id: string) => {
   const response = await api.delete(`${API_URL}/${id}`, { withCredentials: true });
+  return response.data;
+};
+
+export const getBookById = async (id: string) => {
+  const response = await api.get(`/books/${id}`, { withCredentials: true });
   return response.data;
 };

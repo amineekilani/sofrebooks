@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { getBooks } from "../services/BookService";
 
@@ -56,7 +56,9 @@ function Home() {
           {filteredBooks.length > 0 ? (
             filteredBooks.map((book) => (
               <li key={book._id}>
-                {book.title} by {book.author} ({book.category})
+                <Link to={`/books/${book._id}`}>
+                  {book.title} by {book.author} ({book.category})
+                </Link>
               </li>
             ))
           ) : (

@@ -40,11 +40,11 @@ export const addBook = async (req: AuthRequest, res: Response) : Promise<any> =>
 
 export const updateBook = async (req: AuthRequest, res: Response): Promise<any> => {
   const { id } = req.params;
-  const { title, author } = req.body;
+  const { title, author, category } = req.body;
   try {
     const book = await Book.findOneAndUpdate(
       { _id: id, owner: req.user._id },
-      { title, author },
+      { title, author, category },
       { new: true }
     );
     
@@ -72,5 +72,17 @@ export const deleteBook = async (req: AuthRequest, res: Response): Promise<any> 
     res.json({ message: "Book deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Error deleting book" });
+  }
+};
+
+export const getBookById = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const book = await Book.findById(req.params.id).populate("owner", "name email");
+    if (!book) {
+      return res.status(404).json({ message: "Book not found" });
+    }
+    res.json(book);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching book" });
   }
 };
