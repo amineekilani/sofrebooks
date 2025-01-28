@@ -3,6 +3,7 @@ import { AuthContext } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { getBooks } from "../services/BookService";
+import { getLoanRequests } from "../services/BookService";
 
 function Home() {
   const { user } = useContext(AuthContext)!;
@@ -10,12 +11,25 @@ function Home() {
   const [books, setBooks] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchTriggered, setSearchTriggered] = useState(false);
+  const [loanRequests, setLoanRequests] = useState<any[]>([]);
 
   useEffect(() => {
     if (!user) {
       navigate("/");
     }
   }, [user, navigate]);
+
+  useEffect(() => {
+    const fetchLoanRequests = async () => {
+      try {
+        const data = await getLoanRequests();
+        setLoanRequests(data);
+      } catch (error) {
+        console.error("Error fetching loan requests:", error);
+      }
+    };
+    fetchLoanRequests();
+  }, []);
 
   const fetchBooks = async () => {
     try {
@@ -65,6 +79,20 @@ function Home() {
             <p>No books found</p>
           )}
         </ul>
+      )}
+      {loanRequests.length > 0 && (
+        <div>
+          <h3>Loan Requests</h3>
+          <ul>
+            {loanRequests.map((req) => (
+              <li key={req._id}>
+                {req.borrower.name} requested <strong>{req.book.title}</strong> <em>({req.status==="pending" ? "pending" : req.status==="approved"?"approved":"rejected"})</em>
+                <button>Accept</button>
+                <button>Decline</button>
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
     </div>
   );

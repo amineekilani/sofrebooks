@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     booksOwned: { type: [mongoose.Schema.Types.ObjectId], ref: "Book", default: [] },
+    loanRequests: { type: [mongoose.Schema.Types.ObjectId], ref: "LoanRequest", default: [] },
     loans: { type: [mongoose.Schema.Types.ObjectId], ref: "LoanRequest", default: [] }
   },
   { timestamps: true }

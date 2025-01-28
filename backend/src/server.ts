@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import connectDB from "./config/db";
 import authRoutes from "./routes/authRoutes";
 import bookRoutes from "./routes/bookRoutes";
+import loanRequestRoutes from "./routes/loanRequestRoutes";
 
 dotenv.config();
 connectDB();
@@ -16,5 +17,6 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/books", bookRoutes);
+app.use("/api/loans", loanRequestRoutes);
 
 app.listen(5000,()=>console.log("Server running on port 5000"));

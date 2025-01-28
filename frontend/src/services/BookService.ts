@@ -1,4 +1,5 @@
 import api from "./api";
+import axios from "axios";
 
 const API_URL = "/books";
 
@@ -32,4 +33,32 @@ export const deleteBook = async (id: string) => {
 export const getBookById = async (id: string) => {
   const response = await api.get(`/books/${id}`, { withCredentials: true });
   return response.data;
+};
+
+export const requestLoan = async (bookId: string) => {
+  const response = await api.post("/loans", { bookId }, { withCredentials: true });
+  return response.data;
+};
+
+export const getLoanRequests = async () => {
+  const response = await api.get("/loans", { withCredentials: true });
+  return response.data;
+};
+
+export const acceptLoanRequest = async (requestId: string) => {
+  try {
+    await axios.put(`/api/loanrequests/accept/${requestId}`);
+  } catch (error) {
+    console.error("Error accepting loan request:", error);
+    throw error;
+  }
+};
+
+export const declineLoanRequest = async (requestId: string) => {
+  try {
+    await axios.put(`/api/loanrequests/decline/${requestId}`);
+  } catch (error) {
+    console.error("Error declining loan request:", error);
+    throw error;
+  }
 };
