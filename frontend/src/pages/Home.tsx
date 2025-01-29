@@ -2,8 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import { getBooks } from "../services/BookService";
-import { getLoanRequests } from "../services/BookService";
+import { getBooks, getLoanRequestsForOwner, getLoanRequestsForBorrower } from "../services/BookService";
 import api from "../services/api"; // Import API instance
 
 function Home() {
@@ -12,7 +11,8 @@ function Home() {
   const [books, setBooks] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchTriggered, setSearchTriggered] = useState(false);
-  const [loanRequests, setLoanRequests] = useState<any[]>([]);
+  const [ownerLoanRequests, setOwnerLoanRequests] = useState<any[]>([]);
+  const [borrowerLoanRequests, setBorrowerLoanRequests] = useState<any[]>([]);
 
   useEffect(() => {
     if (!user) {
@@ -23,8 +23,10 @@ function Home() {
   useEffect(() => {
     const fetchLoanRequests = async () => {
       try {
-        const data = await getLoanRequests();
-        setLoanRequests(data);
+        const ownerRequests = await getLoanRequestsForOwner();
+        const borrowerRequests = await getLoanRequestsForBorrower();
+        setOwnerLoanRequests(ownerRequests);
+        setBorrowerLoanRequests(borrowerRequests);
       } catch (error) {
         console.error("Error fetching loan requests:", error);
       }
@@ -52,7 +54,7 @@ function Home() {
   const handleAccept = async (requestId: string) => {
     try {
       await api.put(`/loans/accept/${requestId}`, {}, { withCredentials: true });
-      setLoanRequests((prev) =>
+      setOwnerLoanRequests((prev) =>
         prev.map((req) => (req._id === requestId ? { ...req, status: "approved" } : req))
       );
     } catch (error) {
@@ -63,11 +65,22 @@ function Home() {
   const handleDecline = async (requestId: string) => {
     try {
       await api.put(`/loans/decline/${requestId}`, {}, { withCredentials: true });
-      setLoanRequests((prev) =>
+      setOwnerLoanRequests((prev) =>
         prev.map((req) => (req._id === requestId ? { ...req, status: "rejected" } : req))
       );
     } catch (error) {
       console.error("Error declining loan request:", error);
+    }
+  };
+
+  const handleReturnBook = async (requestId: string) => {
+    try {
+      await api.put(`/loans/return/${requestId}`, {}, { withCredentials: true });
+      setBorrowerLoanRequests((prev) =>
+        prev.map((req) => (req._id === requestId ? { ...req, status: "returned" } : req))
+      );
+    } catch (error) {
+      console.error("Error returning book:", error);
     }
   };
 
@@ -103,14 +116,15 @@ function Home() {
           )}
         </ul>
       )}
-      {loanRequests.length > 0 && (
+
+      {ownerLoanRequests.length > 0 && (
         <div>
-          <h3>Loan Requests</h3>
+          <h3>Loan Requests for Your Books</h3>
           <ul>
-            {loanRequests.map((req) => (
+            {ownerLoanRequests.map((req) => (
               <li key={req._id}>
                 {req.borrower.name} requested <strong>{req.book.title}</strong>{" "}
-                <em>({req.status === "pending" ? "pending" : req.status === "approved" ? "approved" : "rejected"})</em>
+                <em>({req.status})</em>
                 {req.status === "pending" && (
                   <>
                     <button onClick={() => handleAccept(req._id)}>Accept</button>

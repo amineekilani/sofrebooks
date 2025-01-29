@@ -1,11 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { addBook, updateBook, deleteBook, getBooksByUser } from "../services/BookService";
+import Navbar from "./Navbar";
+import { AuthContext } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const MyBooks = () => {
+  const { user } = useContext(AuthContext)!;
+  const navigate = useNavigate();
   const [books, setBooks] = useState<any[]>([]);
   const [newBook, setNewBook] = useState({ title: "", author: "", category: "" });
   const [showForm, setShowForm] = useState(false);
   const [editingBook, setEditingBook] = useState<any>(null);
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
 
   useEffect(() => {
     fetchBooks();
@@ -57,11 +68,12 @@ const MyBooks = () => {
   const handleEdit = (book: any) => {
     setEditingBook(book);
     setNewBook({ title: book.title, author: book.author, category: book.category });
-    setShowForm(true); // Afficher le formulaire de modification
+    setShowForm(true);
   };
 
   return (
     <div>
+      <Navbar />
       <h1>My Books</h1>
       <button onClick={() => setShowForm(!showForm)}>
         {showForm ? "Annuler" : "Ajouter un livre"}

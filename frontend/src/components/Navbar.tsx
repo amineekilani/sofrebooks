@@ -11,7 +11,7 @@ function Navbar() {
       <div>
         {user && (
           <>
-            <div><Link to="">My Requests</Link></div>
+            <div><Link to="/myrequests">My Requests</Link></div>
             <div><Link to="/mybooks">My Books</Link></div>
             <span style={{ marginRight: "10px" }}>Hello, {user.name}</span>
             <button onClick={logout} style={{ background: "red", color: "white", border: "none", padding: "5px 10px" }}>

@@ -40,8 +40,14 @@ export const requestLoan = async (bookId: string) => {
   return response.data;
 };
 
-export const getLoanRequests = async () => {
-  const response = await api.get("/loans", { withCredentials: true });
+// Get loan requests made by the logged-in user
+export const getLoanRequestsForBorrower = async () => {
+  const response = await api.get("/loans/borrower", { withCredentials: true });
+  return response.data;
+};
+
+export const getLoanRequestsForOwner = async () => {
+  const response = await api.get("/loans/owner", { withCredentials: true });
   return response.data;
 };
 

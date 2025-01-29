@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getBookById, requestLoan } from "../services/BookService";
 import Navbar from "../components/Navbar";
 import { AuthContext } from "../context/AuthContext";
@@ -7,9 +7,16 @@ import { AuthContext } from "../context/AuthContext";
 function BookPage() {
   const { id } = useParams();
   const { user } = useContext(AuthContext)!;
+  const navigate = useNavigate();
   const [book, setBook] = useState<any>(null);
   const [requested, setRequested] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+      if (!user) {
+        navigate("/");
+      }
+    }, [user, navigate]);
 
   useEffect(() => {
     const fetchBook = async () => {

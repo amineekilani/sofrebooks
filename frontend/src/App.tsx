@@ -4,8 +4,10 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import MyBooks from "./components/MyBooks";
 import BookPage from "./components/BookPage";
+import MyRequests from "./components/MyRequests";
 
-function App() {
+function App()
+{
   return (
     <Routes>
       <Route path="/" element={<Login />} />
@@ -13,6 +15,7 @@ function App() {
       <Route path="/home" element={<Home />} />
       <Route path="/mybooks" element={<MyBooks />}/>
       <Route path="/books/:id" element={<BookPage />} />
+      <Route path="/myrequests" element={<MyRequests />} />
     </Routes>
   );
 }
