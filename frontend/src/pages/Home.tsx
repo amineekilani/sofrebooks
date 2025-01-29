@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { getBooks } from "../services/BookService";
 import { getLoanRequests } from "../services/BookService";
+import api from "../services/api"; // Import API instance
 
 function Home() {
   const { user } = useContext(AuthContext)!;
@@ -48,6 +49,28 @@ function Home() {
     }
   };
 
+  const handleAccept = async (requestId: string) => {
+    try {
+      await api.put(`/loans/accept/${requestId}`, {}, { withCredentials: true });
+      setLoanRequests((prev) =>
+        prev.map((req) => (req._id === requestId ? { ...req, status: "approved" } : req))
+      );
+    } catch (error) {
+      console.error("Error accepting loan request:", error);
+    }
+  };
+
+  const handleDecline = async (requestId: string) => {
+    try {
+      await api.put(`/loans/decline/${requestId}`, {}, { withCredentials: true });
+      setLoanRequests((prev) =>
+        prev.map((req) => (req._id === requestId ? { ...req, status: "rejected" } : req))
+      );
+    } catch (error) {
+      console.error("Error declining loan request:", error);
+    }
+  };
+
   const filteredBooks = books.filter(
     (book) =>
       book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -86,9 +109,14 @@ function Home() {
           <ul>
             {loanRequests.map((req) => (
               <li key={req._id}>
-                {req.borrower.name} requested <strong>{req.book.title}</strong> <em>({req.status==="pending" ? "pending" : req.status==="approved"?"approved":"rejected"})</em>
-                <button>Accept</button>
-                <button>Decline</button>
+                {req.borrower.name} requested <strong>{req.book.title}</strong>{" "}
+                <em>({req.status === "pending" ? "pending" : req.status === "approved" ? "approved" : "rejected"})</em>
+                {req.status === "pending" && (
+                  <>
+                    <button onClick={() => handleAccept(req._id)}>Accept</button>
+                    <button onClick={() => handleDecline(req._id)}>Decline</button>
+                  </>
+                )}
               </li>
             ))}
           </ul>
