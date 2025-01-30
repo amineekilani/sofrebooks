@@ -2,7 +2,7 @@ import express from "express";
 import { requestLoan, getLoanRequestsForOwner, acceptLoanRequest, declineLoanRequest, returnBook, getLoanRequestsForBorrower } from "../controllers/loanRequestController";
 import { protect } from "../middleware/authMiddleware";
 
-const router = express.Router();
+const router=express.Router();
 
 router.post("/", protect, requestLoan);
 router.get("/owner", protect, getLoanRequestsForOwner);
