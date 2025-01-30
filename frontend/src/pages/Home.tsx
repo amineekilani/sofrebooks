@@ -12,7 +12,6 @@ function Home() {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchTriggered, setSearchTriggered] = useState(false);
   const [ownerLoanRequests, setOwnerLoanRequests] = useState<any[]>([]);
-  const [borrowerLoanRequests, setBorrowerLoanRequests] = useState<any[]>([]);
 
   useEffect(() => {
     if (!user) {
@@ -115,30 +114,37 @@ function Home() {
         {ownerLoanRequests.length > 0 && (
           <div>
             <h3 className="text-2xl font-semibold mb-4">Loan Requests for Your Books</h3>
-            <ul>
-              {ownerLoanRequests.map((req) => (
-                <li key={req._id} className="mb-4">
-                  {req.borrower.name} requested <strong>{req.book.title}</strong>{" "}
-                  <em>({req.status})</em>
-                  {req.status === "pending" && (
-                    <div className="mt-2">
-                      <button
-                        onClick={() => handleAccept(req._id)}
-                        className="mr-4 bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600"
-                      >
-                        Accept
-                      </button>
-                      <button
-                        onClick={() => handleDecline(req._id)}
-                        className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600"
-                      >
-                        Decline
-                      </button>
-                    </div>
-                  )}
-                </li>
-              ))}
-            </ul>
+            <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  {ownerLoanRequests.length > 0 ? (
+    ownerLoanRequests.map((req) => (
+      <div key={req._id} className="shadow-md rounded-lg p-4 bg-white">
+        <p className="text-lg font-medium">{req.borrower.name} requested</p>
+        <strong className="block text-xl">{req.book.title}</strong>
+        <em className="text-gray-600">({req.status})</em>
+
+        {req.status === "pending" && (
+          <div className="mt-4 flex justify-between">
+            <button
+              onClick={() => handleAccept(req._id)}
+              className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600"
+            >
+              Accept
+            </button>
+            <button
+              onClick={() => handleDecline(req._id)}
+              className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600"
+            >
+              Decline
+            </button>
+          </div>
+        )}
+      </div>
+    ))
+  ) : (
+    <p className="col-span-full text-center text-gray-500">No requests found.</p>
+  )}
+</div>
+
           </div>
         )}
       </main>

@@ -10,16 +10,16 @@ function Navbar() {
       {/* Sidebar */}
       <aside className="w-64 bg-gray-800 text-white p-4 flex flex-col justify-between">
         <div>
-          <h2 className="text-2xl font-bold mb-8">SofreBooks</h2>
+          <h2 className="text-2xl font-bold mb-8"><Link to="/home">SofreBooks</Link></h2>
           <div className="space-y-6">
             {user && (
               <>
                 <div className="space-y-2">
-                  <Link to="/myrequests" className="block text-orange-600 hover:text-orange-500">
-                    My Requests
-                  </Link>
                   <Link to="/mybooks" className="block text-orange-600 hover:text-orange-500">
-                    My Books
+                    My Livres
+                  </Link>
+                  <Link to="/myrequests" className="block text-orange-600 hover:text-orange-500">
+                    My Demandes
                   </Link>
                 </div>
               </>
@@ -35,16 +35,11 @@ function Navbar() {
               onClick={logout}
               className="w-full bg-orange-600 text-white py-2 rounded-lg hover:bg-orange-700"
             >
-              Logout
+              Déconnexion
             </button>
           </div>
         )}
       </aside>
-
-      {/* Main Content */}
-      <main className="flex-1 p-6 bg-gray-50">
-        {/* Add the rest of your main content here */}
-      </main>
     </div>
   );
 }

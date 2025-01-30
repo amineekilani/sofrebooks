@@ -41,7 +41,7 @@ function Login() {
           <div className="mb-6">
             <input
               type="password"
-              placeholder="Password"
+              placeholder="Mot de passe"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -52,12 +52,12 @@ function Login() {
             type="submit"
             className="w-full p-3 bg-orange-500 text-white font-semibold rounded-lg hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
           >
-            Login
+            Se connecter
           </button>
         </form>
         <div className="mt-4 text-center">
           <a href="Register" className="text-orange-500 hover:underline">
-            Register
+            Créer un nouveau compte
           </a>
         </div>
         {error && <p className="text-red-500 text-center mt-4">{error}</p>}

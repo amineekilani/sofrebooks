@@ -7,10 +7,15 @@ function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (password !== confirmPassword) {
+      setError("Les mots de passe ne correspondent pas");
+      return;
+    }
     try {
       setError(""); // Reset error
       await register(name, email, password);
@@ -31,7 +36,7 @@ function Register() {
           <div className="mb-4">
             <input
               type="text"
-              placeholder="Name"
+              placeholder="Nom"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
@@ -48,12 +53,22 @@ function Register() {
               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
           </div>
+          <div className="mb-4">
+            <input
+              type="password"
+              placeholder="Mot de passe"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+          </div>
           <div className="mb-6">
             <input
               type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Confirmer le mot de passe"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               required
               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
@@ -67,7 +82,7 @@ function Register() {
         </form>
         <div className="mt-4 text-center">
           <a href="/" className="text-orange-500 hover:underline">
-            Already have an account? Login
+            Vous avez déjà un compte ? Se connecter
           </a>
         </div>
         {error && <p className="text-red-500 text-center mt-4">{error}</p>}

@@ -19,7 +19,7 @@ export const getBooksByUser=async(req: AuthRequest, res: Response) : Promise<any
 {
     try
     {
-        const books = await Book.find({ owner: req.user._id });
+        const books=await Book.find({ owner: req.user._id });
         res.json(books);
     }
     catch (error)
