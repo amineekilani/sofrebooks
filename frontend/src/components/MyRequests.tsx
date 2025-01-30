@@ -8,14 +8,14 @@ import { useNavigate } from "react-router-dom";
 function MyRequests() {
   const { user } = useContext(AuthContext)!;
   const navigate = useNavigate();
-  
+
   const [borrowerLoanRequests, setBorrowerLoanRequests] = useState<any[]>([]);
 
   useEffect(() => {
-      if (!user) {
-        navigate("/");
-      }
-    }, [user, navigate]);
+    if (!user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
 
   useEffect(() => {
     const fetchLoanRequests = async () => {
@@ -41,24 +41,35 @@ function MyRequests() {
   };
 
   return (
-    <div>
-        <Navbar />
-      <h3>Your Loan Requests</h3>
-      <ul>
-        {borrowerLoanRequests.length > 0 ? (
-          borrowerLoanRequests.map((req) => (
-            <li key={req._id}>
-              You requested <strong>{req.book.title}</strong>
-              <em>({req.status})</em>
-              {req.status === "approved" && (
-                <button onClick={() => handleReturnBook(req._id)}>Return Book</button>
-              )}
-            </li>
-          ))
-        ) : (
-          <p>No loan requests found</p>
-        )}
-      </ul>
+    <div className="flex min-h-screen">
+      {/* Sidebar */}
+      <Navbar />
+
+      {/* Main Content */}
+      <main className="flex-1 p-6 bg-gray-50">
+        <h3 className="text-3xl font-bold mb-8">Your Loan Requests</h3>
+        <ul className="space-y-4">
+          {borrowerLoanRequests.length > 0 ? (
+            borrowerLoanRequests.map((req) => (
+              <li key={req._id} className="flex justify-between items-center p-4 bg-white rounded-md shadow-md">
+                <span>
+                  You requested <strong>{req.book.title}</strong> <em>({req.status})</em>
+                </span>
+                {req.status === "approved" && (
+                  <button
+                    onClick={() => handleReturnBook(req._id)}
+                    className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600"
+                  >
+                    Return Book
+                  </button>
+                )}
+              </li>
+            ))
+          ) : (
+            <p>No loan requests found</p>
+          )}
+        </ul>
+      </main>
     </div>
   );
 }

@@ -13,10 +13,10 @@ function BookPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-      if (!user) {
-        navigate("/");
-      }
-    }, [user, navigate]);
+    if (!user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
 
   useEffect(() => {
     const fetchBook = async () => {
@@ -44,22 +44,28 @@ function BookPage() {
   };
 
   return (
-    <div>
+    <div className="flex min-h-screen">
+      {/* Sidebar */}
       <Navbar />
-      <h1>{book.title}</h1>
-      <p><strong>Author:</strong> {book.author}</p>
-      <p><strong>Category:</strong> {book.category}</p>
-      <p><strong>Owner:</strong> {book.owner?.name || "Unknown"}</p>
-      <p><strong>Status:</strong> {book.isAvailable ? "Available" : "Loaned"}</p>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <p>
-        <button 
-          disabled={!book.isAvailable || isOwner || requested} 
-          onClick={handleRequest}
-        >
-          {requested ? "Request Sent" : "Request"}
-        </button>
-      </p>
+
+      {/* Main Content */}
+      <main className="flex-1 p-6 bg-gray-50">
+        <h1 className="text-4xl font-bold mb-4">{book.title}</h1>
+        <p className="text-xl"><strong>Author:</strong> {book.author}</p>
+        <p className="text-xl"><strong>Category:</strong> {book.category}</p>
+        <p className="text-xl"><strong>Owner:</strong> {book.owner?.name || "Unknown"}</p>
+        <p className="text-xl"><strong>Status:</strong> {book.isAvailable ? "Available" : "Loaned"}</p>
+        {error && <p className="text-red-500">{error}</p>}
+        <div className="mt-4">
+          <button
+            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+            disabled={!book.isAvailable || isOwner}
+            onClick={handleRequest}
+          >
+            {requested ? "Request Sent" : "Request"}
+          </button>
+        </div>
+      </main>
     </div>
   );
 }

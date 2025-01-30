@@ -36,7 +36,7 @@ const MyBooks = () => {
     try {
       await addBook(newBook);
       setNewBook({ title: "", author: "", category: "" });
-      setShowForm(false); // Cacher le formulaire après ajout
+      setShowForm(false);
       fetchBooks();
     } catch (error) {
       console.error("Error adding book", error);
@@ -49,7 +49,7 @@ const MyBooks = () => {
       await updateBook(editingBook._id, newBook);
       setNewBook({ title: "", author: "", category: "" });
       setEditingBook(null);
-      setShowForm(false); // Cacher le formulaire après mise à jour
+      setShowForm(false);
       fetchBooks();
     } catch (error) {
       console.error("Error updating book", error);
@@ -72,52 +72,80 @@ const MyBooks = () => {
   };
 
   return (
-    <div>
+    <div className="flex min-h-screen">
+      {/* Sidebar */}
       <Navbar />
-      <h1>My Books</h1>
-      <button onClick={() => setShowForm(!showForm)}>
-        {showForm ? "Annuler" : "Ajouter un livre"}
-      </button>
 
-      {showForm && (
-        <div>
-          <input
-            type="text"
-            placeholder="Title"
-            value={newBook.title}
-            onChange={(e) => setNewBook({ ...newBook, title: e.target.value })}
-          />
-          <input
-            type="text"
-            placeholder="Author"
-            value={newBook.author}
-            onChange={(e) => setNewBook({ ...newBook, author: e.target.value })}
-          />
-          <input
-            type="text"
-            placeholder="Category"
-            value={newBook.category}
-            onChange={(e) => setNewBook({ ...newBook, category: e.target.value })}
-          />
-          <button onClick={editingBook ? handleUpdateBook : handleAddBook}>
-            {editingBook ? "Mettre à jour" : "Confirmer"}
-          </button>
-        </div>
-      )}
+      {/* Main Content */}
+      <main className="flex-1 p-6 bg-gray-50">
+        <h1 className="text-3xl font-bold mb-8">My Books</h1>
+        <button
+          onClick={() => setShowForm(!showForm)}
+          className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+        >
+          {showForm ? "Cancel" : "Add a Book"}
+        </button>
 
-      <ul>
-        {books.length > 0 ? (
-          books.map((book) => (
-            <li key={book._id}>
-              {book.title} - {book.author} - {book.category}
-              <button onClick={() => handleEdit(book)}>Modifier</button>
-              <button onClick={() => handleDelete(book._id)}>Supprimer</button>
-            </li>
-          ))
-        ) : (
-          <p>Aucun livre trouvé.</p>
+        {showForm && (
+          <div className="mt-6 space-y-4">
+            <input
+              type="text"
+              placeholder="Title"
+              value={newBook.title}
+              onChange={(e) => setNewBook({ ...newBook, title: e.target.value })}
+              className="p-3 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+            <input
+              type="text"
+              placeholder="Author"
+              value={newBook.author}
+              onChange={(e) => setNewBook({ ...newBook, author: e.target.value })}
+              className="p-3 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+            <input
+              type="text"
+              placeholder="Category"
+              value={newBook.category}
+              onChange={(e) => setNewBook({ ...newBook, category: e.target.value })}
+              className="p-3 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+            <button
+              onClick={editingBook ? handleUpdateBook : handleAddBook}
+              className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600"
+            >
+              {editingBook ? "Update" : "Confirm"}
+            </button>
+          </div>
         )}
-      </ul>
+
+        <ul className="mt-8">
+          {books.length > 0 ? (
+            books.map((book) => (
+              <li key={book._id} className="mb-6 flex justify-between items-center">
+                <span className="font-medium">
+                  {book.title} - {book.author} - {book.category}
+                </span>
+                <div>
+                  <button
+                    onClick={() => handleEdit(book)}
+                    className="bg-yellow-500 text-white py-2 px-4 rounded-md hover:bg-yellow-600 mr-4"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(book._id)}
+                    className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </li>
+            ))
+          ) : (
+            <p>No books found.</p>
+          )}
+        </ul>
+      </main>
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import { useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import SofrecomLogo from '../assets/sofrecom-logo.png';
 
 function Login() {
   const { login } = useContext(AuthContext)!;
@@ -19,15 +20,48 @@ function Login() {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        <button type="submit">Login</button>
-      </form>
-      <a href="Register">Register</a>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      <div className="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full">
+        <div className="text-center mb-8">
+          <img src={SofrecomLogo} alt="Sofrecom" className="mx-auto mb-4 w-24 h-24" />
+          <h1 className="text-3xl font-bold text-gray-800">SofreBooks</h1>
+        </div>
+
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+          </div>
+          <div className="mb-6">
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full p-3 bg-orange-500 text-white font-semibold rounded-lg hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
+          >
+            Login
+          </button>
+        </form>
+        <div className="mt-4 text-center">
+          <a href="Register" className="text-orange-500 hover:underline">
+            Register
+          </a>
+        </div>
+        {error && <p className="text-red-500 text-center mt-4">{error}</p>}
+      </div>
     </div>
   );
 }

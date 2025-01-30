@@ -73,17 +73,6 @@ function Home() {
     }
   };
 
-  const handleReturnBook = async (requestId: string) => {
-    try {
-      await api.put(`/loans/return/${requestId}`, {}, { withCredentials: true });
-      setBorrowerLoanRequests((prev) =>
-        prev.map((req) => (req._id === requestId ? { ...req, status: "returned" } : req))
-      );
-    } catch (error) {
-      console.error("Error returning book:", error);
-    }
-  };
-
   const filteredBooks = books.filter(
     (book) =>
       book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -92,50 +81,67 @@ function Home() {
   );
 
   return (
-    <div>
+    <div className="flex min-h-screen">
+      {/* Sidebar */}
       <Navbar />
-      <h1>Welcome to SofreBooks</h1>
-      <input
-        type="search"
-        placeholder="Search for books"
-        value={searchTerm}
-        onChange={handleSearch}
-      />
-      {searchTriggered && searchTerm && (
-        <ul>
-          {filteredBooks.length > 0 ? (
-            filteredBooks.map((book) => (
-              <li key={book._id}>
-                <Link to={`/books/${book._id}`}>
-                  {book.title} by {book.author} ({book.category})
-                </Link>
-              </li>
-            ))
-          ) : (
-            <p>No books found</p>
-          )}
-        </ul>
-      )}
 
-      {ownerLoanRequests.length > 0 && (
-        <div>
-          <h3>Loan Requests for Your Books</h3>
+      {/* Main Content */}
+      <main className="flex-1 p-6 bg-gray-50">
+        <h1 className="text-3xl font-bold mb-8">Welcome to SofreBooks</h1>
+        <input
+          type="search"
+          placeholder="Search for books"
+          value={searchTerm}
+          onChange={handleSearch}
+          className="p-3 w-full mb-6 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+        />
+        
+        {searchTriggered && searchTerm && (
           <ul>
-            {ownerLoanRequests.map((req) => (
-              <li key={req._id}>
-                {req.borrower.name} requested <strong>{req.book.title}</strong>{" "}
-                <em>({req.status})</em>
-                {req.status === "pending" && (
-                  <>
-                    <button onClick={() => handleAccept(req._id)}>Accept</button>
-                    <button onClick={() => handleDecline(req._id)}>Decline</button>
-                  </>
-                )}
-              </li>
-            ))}
+            {filteredBooks.length > 0 ? (
+              filteredBooks.map((book) => (
+                <li key={book._id}>
+                  <Link to={`/books/${book._id}`} className="text-orange-600 hover:text-orange-500">
+                    {book.title} by {book.author} ({book.category})
+                  </Link>
+                </li>
+              ))
+            ) : (
+              <p>No books found</p>
+            )}
           </ul>
-        </div>
-      )}
+        )}
+
+        {ownerLoanRequests.length > 0 && (
+          <div>
+            <h3 className="text-2xl font-semibold mb-4">Loan Requests for Your Books</h3>
+            <ul>
+              {ownerLoanRequests.map((req) => (
+                <li key={req._id} className="mb-4">
+                  {req.borrower.name} requested <strong>{req.book.title}</strong>{" "}
+                  <em>({req.status})</em>
+                  {req.status === "pending" && (
+                    <div className="mt-2">
+                      <button
+                        onClick={() => handleAccept(req._id)}
+                        className="mr-4 bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600"
+                      >
+                        Accept
+                      </button>
+                      <button
+                        onClick={() => handleDecline(req._id)}
+                        className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600"
+                      >
+                        Decline
+                      </button>
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </main>
     </div>
   );
 }

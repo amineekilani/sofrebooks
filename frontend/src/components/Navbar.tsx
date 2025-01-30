@@ -6,21 +6,46 @@ function Navbar() {
   const { user, logout } = useContext(AuthContext)!;
 
   return (
-    <nav style={{ display: "flex", justifyContent: "space-between", background: "#333", color: "#fff" }}>
-      <h2>My App</h2>
-      <div>
+    <div className="flex min-h-screen">
+      {/* Sidebar */}
+      <aside className="w-64 bg-gray-800 text-white p-4 flex flex-col justify-between">
+        <div>
+          <h2 className="text-2xl font-bold mb-8">SofreBooks</h2>
+          <div className="space-y-6">
+            {user && (
+              <>
+                <div className="space-y-2">
+                  <Link to="/myrequests" className="block text-orange-600 hover:text-orange-500">
+                    My Requests
+                  </Link>
+                  <Link to="/mybooks" className="block text-orange-600 hover:text-orange-500">
+                    My Books
+                  </Link>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Logout Button */}
         {user && (
-          <>
-            <div><Link to="/myrequests">My Requests</Link></div>
-            <div><Link to="/mybooks">My Books</Link></div>
-            <span style={{ marginRight: "10px" }}>Hello, {user.name}</span>
-            <button onClick={logout} style={{ background: "red", color: "white", border: "none", padding: "5px 10px" }}>
+          <div className="mt-auto">
+            <span className="block text-white mb-2">Hello, {user.name}</span>
+            <button
+              onClick={logout}
+              className="w-full bg-orange-600 text-white py-2 rounded-lg hover:bg-orange-700"
+            >
               Logout
             </button>
-          </>
+          </div>
         )}
-      </div>
-    </nav>
+      </aside>
+
+      {/* Main Content */}
+      <main className="flex-1 p-6 bg-gray-50">
+        {/* Add the rest of your main content here */}
+      </main>
+    </div>
   );
 }
 
