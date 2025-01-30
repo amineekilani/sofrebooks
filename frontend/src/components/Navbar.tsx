@@ -30,7 +30,7 @@ function Navbar() {
         {/* Logout Button */}
         {user && (
           <div className="mt-auto">
-            <span className="block text-white mb-2">Hello, {user.name}</span>
+            <span className="block text-white mb-2">{user.name}</span>
             <button
               onClick={logout}
               className="w-full bg-orange-600 text-white py-2 rounded-lg hover:bg-orange-700"

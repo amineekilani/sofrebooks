@@ -77,7 +77,7 @@ function Register() {
             type="submit"
             className="w-full p-3 bg-orange-500 text-white font-semibold rounded-lg hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
           >
-            Register
+            S'inscrire
           </button>
         </form>
         <div className="mt-4 text-center">
