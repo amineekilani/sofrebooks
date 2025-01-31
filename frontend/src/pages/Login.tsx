@@ -18,7 +18,7 @@ function Login()
         }
         catch (err: any)
         {
-            setError(err.response?.data?.message || "Invalid email or password");
+            setError(err.response?.data?.message || "Email ou mot de passe incorrect(s)");
         }
     };
     return (
