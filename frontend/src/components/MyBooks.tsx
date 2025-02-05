@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { addBook, updateBook, deleteBook, getBooksByUser } from "../services/BookService";
+import { addBook, updateBook, deleteBook, getBooksByUser, BookCategory } from "../services/BookService";
 import Navbar from "./Navbar";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +9,7 @@ const MyBooks=()=>
     const { user }=useContext(AuthContext)!;
     const navigate=useNavigate();
     const [books, setBooks]=useState<any[]>([]);
-    const [newBook, setNewBook]=useState({ title: "", author: "", category: "" });
+    const [newBook, setNewBook]=useState({ title: "", author: "", category: BookCategory });
     const [showForm, setShowForm]=useState(false);
     const [editingBook, setEditingBook]=useState<any>(null);
     useEffect(()=>
@@ -41,7 +41,7 @@ const MyBooks=()=>
         try
         {
             await addBook(newBook);
-            setNewBook({ title: "", author: "", category: "" });
+            setNewBook({ title: "", author: "", category: BookCategory });
             setShowForm(false);
             fetchBooks();
         }
@@ -56,7 +56,7 @@ const MyBooks=()=>
         try
         {
             await updateBook(editingBook._id, newBook);
-            setNewBook({ title: "", author: "", category: "" });
+            setNewBook({ title: "", author: "", category: BookCategory });
             setEditingBook(null);
             setShowForm(false);
             fetchBooks();
@@ -115,13 +115,11 @@ const MyBooks=()=>
                             onChange={(e)=>setNewBook({ ...newBook, author: e.target.value })}
                             className="p-3 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
                         />
-                        <input
-                            type="text"
-                            placeholder="Catégorie"
+                        <select
                             value={newBook.category}
-                            onChange={(e)=>setNewBook({ ...newBook, category: e.target.value })}
+                            onChange={(e) => setNewBook({ ...newBook, category: e.target.value as BookCategory })}
                             className="p-3 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-                        />
+                        >{Object.values(BookCategory).map((cat)=>(<option key={cat} value={cat}>{cat}</option>))}</select>
                         <button
                             onClick={editingBook?handleUpdateBook:handleAddBook}
                             className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600"

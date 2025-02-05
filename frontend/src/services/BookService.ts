@@ -3,6 +3,20 @@ import axios from "axios";
 
 const API_URL="/books";
 
+export enum BookCategory
+{
+    Fiction="Fiction",
+    NonFiction="Non-fiction",
+    Educational="Éducatif et académique",
+    Children="Enfants et jeunes adultes",
+    Comics="Bandes dessinées et romans graphiques",
+    Religious="Religieux et spirituel",
+    Science="Sciences et technologies",
+    Business="Affaires et économie",
+    SelfHelp="Développement personnel et autonomie",
+    Lifestyle="Loisirs et style de vie"
+}
+
 export const getBooks=async()=>
 {
     const response=await api.get(API_URL, { withCredentials: true });
@@ -15,13 +29,13 @@ export const getBooksByUser=async()=>
     return response.data;
 };
 
-export const addBook=async(bookData: { title: string; author: string; category: string })=>
+export const addBook=async(bookData: { title: string; author: string; category: BookCategory })=>
 {
     const response=await api.post(API_URL, bookData, { withCredentials: true });
     return response.data;
 };
 
-export const updateBook=async(id: string, updatedData: { title: string; author: string; category: string })=>
+export const updateBook=async(id: string, updatedData: { title: string; author: string; category: BookCategory })=>
 {
     const response=await api.put(`${API_URL}/${id}`, updatedData, { withCredentials: true });
     return response.data;
