@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getBookById, requestLoan } from "../services/BookService";
-import Navbar from "../components/Navbar";
+import Navbar from "./Navbar";
 import { AuthContext } from "../context/AuthContext";
 
 function BookPage()
@@ -26,6 +26,7 @@ function BookPage()
             try
             {
                 const data=await getBookById(id!);
+                console.log(data);
                 setBook(data);
             }
             catch (error)
@@ -72,7 +73,7 @@ function BookPage()
                         </p>
                         <p>
                             <i className="bi bi-person-circle text-gray-600 mr-2"></i>
-                            <span className="font-semibold">Propriétaire:</span> {book.owner?.name || "Unknown"}
+                            <span className="font-semibold">Propriétaire:</span> {book.owner?.name}
                         </p>
                         <p>
                             <i className={`bi ${book.isAvailable ? "bi-check-circle-fill text-green-600" : "bi-x-circle-fill text-red-600"} mr-2`}></i>
@@ -81,6 +82,12 @@ function BookPage()
                                 className={`px-2 py-1 rounded-md ${book.isAvailable?"bg-green-200 text-green-700":"bg-red-200 text-red-700"}`}
                             >{book.isAvailable?"Disponible":"Prêté"}</span>
                         </p>
+                        {book.borrower?.name && (
+                            <p>
+                                <i className="bi bi-person-raised-hand text-gray-600 mr-2"></i>
+                                <span className="font-semibold">Emprunteur actuel:</span> {book.borrower.name}
+                            </p>
+                        )}
                     </div>
                     {error && (<p className="mt-3 text-sm text-red-600 bg-red-100 p-2 rounded-md"><i className="bi bi-exclamation-circle-fill mr-2"></i> {error}</p>)}
                     <div className="mt-6">

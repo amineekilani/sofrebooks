@@ -1,9 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
+import Navbar from "./Navbar";
 import { getBooks, getLoanRequestsForOwner } from "../services/BookService";
 import api from "../services/api";
+import Footer from "./Footer";
 
 function Home()
 {
@@ -156,6 +157,7 @@ function Home()
                             ))):(<p className="col-span-full text-center text-gray-500">Pas de demandes.</p>)}
                         </div>
                     </div>
+                    
                 )}
             </main>
         </div>
