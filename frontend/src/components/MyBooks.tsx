@@ -88,11 +88,17 @@ const MyBooks=()=>
         <div className="flex min-h-screen">
             <Navbar />
             <main className="flex-1 p-6 bg-gray-50">
-                <h1 className="text-3xl font-bold mb-8">Mes Livres</h1>
+                <h1 className="text-3xl font-bold mb-8">
+                    <i className="bi bi-book text-orange-500 mr-2"></i>
+                    <span className="text-orange-500">Mes Livres</span>
+                </h1>
                 <button
                     onClick={()=>setShowForm(!showForm)}
                     className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
-                >{showForm?"Annuler":"Ajouter un livre"}</button>
+                >
+                    <i className={`bi ${showForm ? "bi-x-circle" : "bi-plus-circle"} mr-2`}></i>
+                    {showForm?"Annuler":"Ajouter un livre"}
+                </button>
                 {showForm && (
                     <div className="mt-6 space-y-4">
                         <input
@@ -126,21 +132,36 @@ const MyBooks=()=>
                     {books.length>0?(
                         books.map((book)=>(
                             <div key={book._id} className="shadow-md rounded-lg p-4 bg-white">
-                            <h3 className="text-lg font-semibold">{book.title}</h3>
-                            <p className="text-gray-600">Auteur: {book.author}</p>
-                            <p className="text-gray-600">Catégorie: {book.category}</p>
+                            <h3 className="text-lg font-semibold">
+                                <i className="bi bi-book text-gray-500 mr-2"></i>
+                                {book.title}
+                            </h3>
+                            <p className="text-gray-600">
+                                <i className="bi bi-person text-gray-500 mr-2"></i>
+                                Auteur: {book.author}
+                            </p>
+                            <p className="text-gray-600">
+                                <i className="bi bi-tags-fill text-gray-500 mr-2"></i>
+                                Catégorie: {book.category}
+                            </p>
                             <div className="mt-4 flex justify-between">
                                 <button
                                     onClick={()=>handleEdit(book)}
                                     className="bg-yellow-500 text-white py-2 px-4 rounded-md hover:bg-yellow-600"
-                                >Modifier</button>
+                                >
+                                    <i className="bi bi-pencil-fill mr-2"></i>
+                                    Modifier
+                                </button>
                                 <button
                                     onClick={() => handleDelete(book._id)}
                                     className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600"
-                                >Supprimer</button>
+                                >
+                                    <i className="bi bi-trash-fill mr-2"></i>
+                                    Supprimer
+                                </button>
                             </div>
                         </div>
-                    ))):(<p className="col-span-full text-center text-gray-500">Pas de livres.</p>)}
+                    ))):(<p className="col-span-full text-gray-500"><i className="bi bi-exclamation-circle-fill text-gray-400 mr-2"></i> Pas de livres.</p>)}
                 </ul>
             </main>
         </div>

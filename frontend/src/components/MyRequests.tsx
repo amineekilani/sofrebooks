@@ -49,22 +49,29 @@ function MyRequests()
         <div className="flex min-h-screen">
             <Navbar />
             <main className="flex-1 p-6 bg-gray-50">
-                <h3 className="text-3xl font-bold mb-8">Vos Demandes</h3>
+                <h3 className="text-3xl font-bold mb-8">
+                    <i className="bi bi-journal-bookmark text-orange-500 mr-2"></i>
+                    <span className="text-orange-500">Vos Demandes</span>
+                </h3>
                 <ul className="space-y-4">
                     {borrowerLoanRequests.length>0?(
                         borrowerLoanRequests.map((req)=>(
                             <li key={req._id} className="flex justify-between items-center p-4 bg-white rounded-md shadow-md">
                                 <span>
+                                    <i className="bi bi-book text-gray-500 mr-2"></i>
                                     Vous avez demandé <strong>{req.book.title}</strong> <em>({req.status})</em>
                                 </span>
                                 {req.status==="approved" && (
                                     <button
                                         onClick={() => handleReturnBook(req._id)}
                                         className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600"
-                                    >Retourner le livre</button>
+                                    >
+                                        <i className="bi bi-arrow-return-left mr-2"></i>
+                                        Retourner le livre
+                                    </button>
                                 )}
                             </li>
-                    ))):(<p>Pas de demandes.</p>)}
+                    ))):(<p><i className="bi bi-exclamation-circle-fill text-gray-400 mr-2"></i> Pas de demandes.</p>)}
                 </ul>
             </main>
         </div>

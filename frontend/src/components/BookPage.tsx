@@ -49,7 +49,7 @@ function BookPage()
         }
         catch (error)
         {
-            setError("Loan request already sent or an error occurred.");
+            setError("Demande déja envoyée");
         }
     };
     return (
@@ -57,31 +57,41 @@ function BookPage()
             <Navbar />
             <main className="flex-1 flex items-center justify-center p-6">
                 <div className="w-full max-w-2xl bg-white shadow-lg rounded-lg p-6">
-                    <h1 className="text-3xl font-semibold text-gray-900">{book.title}</h1>
+                    <h1 className="text-3xl font-semibold text-gray-900">
+                        <i className="bi bi-book text-gray-600 mr-2"></i>
+                        {book.title}
+                    </h1>
                     <div className="mt-4 space-y-2 text-lg text-gray-700">
                         <p>
+                            <i className="bi bi-person text-gray-600 mr-2"></i>
                             <span className="font-semibold">Auteur:</span> {book.author}
                         </p>
                         <p>
+                            <i className="bi bi-tags text-gray-600 mr-2"></i>
                             <span className="font-semibold">Catégorie:</span> {book.category}
                         </p>
                         <p>
+                            <i className="bi bi-person-circle text-gray-600 mr-2"></i>
                             <span className="font-semibold">Propriétaire:</span> {book.owner?.name || "Unknown"}
                         </p>
                         <p>
+                            <i className={`bi ${book.isAvailable ? "bi-check-circle-fill text-green-600" : "bi-x-circle-fill text-red-600"} mr-2`}></i>
                             <span className="font-semibold">Statut:</span>{" "}
                             <span
                                 className={`px-2 py-1 rounded-md ${book.isAvailable?"bg-green-200 text-green-700":"bg-red-200 text-red-700"}`}
                             >{book.isAvailable?"Disponible":"Prêté"}</span>
                         </p>
                     </div>
-                    {error && (<p className="mt-3 text-sm text-red-600 bg-red-100 p-2 rounded-md">{error}</p>)}
+                    {error && (<p className="mt-3 text-sm text-red-600 bg-red-100 p-2 rounded-md"><i className="bi bi-exclamation-circle-fill mr-2"></i> {error}</p>)}
                     <div className="mt-6">
                         <button
                             className={`w-full px-5 py-2 text-white font-semibold rounded-lg transition ${!book.isAvailable || isOwner?"bg-gray-400 cursor-not-allowed":"bg-blue-600 hover:bg-blue-700"}`}
                             disabled={!book.isAvailable || isOwner}
                             onClick={handleRequest}
-                        >{requested?"Demande envoyée":"Réserver"}</button>
+                        >
+                            <i className={`bi ${requested ? "bi-envelope-check-fill" : "bi-cart-plus-fill"} mr-2`}></i>
+                            {requested?"Demande envoyée":"Réserver"}
+                        </button>
                     </div>
                 </div>
             </main>

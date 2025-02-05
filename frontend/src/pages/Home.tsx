@@ -86,7 +86,10 @@ function Home()
         <div className="flex min-h-screen">
             <Navbar />
             <main className="flex-1 p-6 bg-gray-50">
-                <h1 className="text-3xl font-bold mb-8">Welcome to SofreBooks</h1>
+                <h1 className="text-3xl font-bold mb-8">
+                    <i className="bi bi-book-half text-orange-500 mr-2"></i>
+                    <span className="text-orange-500">Welcome to SofreBooks</span>
+                </h1>
                 <input
                     type="search"
                     placeholder="Rechercher des livres"
@@ -99,31 +102,54 @@ function Home()
                         {filteredBooks.length>0?(filteredBooks.map((book)=>(
                             <li key={book._id}>
                                 <Link to={`/books/${book._id}`} className="text-orange-600 hover:text-orange-500">
+                                <i className="bi bi-journal-bookmark-fill text-orange-500 mr-2"></i>
                                     {book.title} de {book.author} ({book.category})
                                 </Link>
                             </li>
-                        ))):(<p>Pas de livres.</p>)}
+                        ))):(<p>Pas de livres trouvés.</p>)}
                     </ul>
                 )}
                 {ownerLoanRequests.length>0 && (
                     <div>
-                        <h3 className="text-2xl font-semibold mb-4">Demandes De Prêt Pour Vos Livres</h3>
+                        <h3 className="text-2xl font-semibold mb-4">
+                            <i className="bi bi-hourglass-split text-orange-500 mr-2"></i>
+                            Demandes De Prêt Pour Vos Livres
+                        </h3>
                         <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {ownerLoanRequests.length>0?(ownerLoanRequests.map((req)=>(
+                            {ownerLoanRequests.length>0?(ownerLoanRequests.sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt)).map((req)=>(
                                 <div key={req._id} className="shadow-md rounded-lg p-4 bg-white">
-                                    <p className="text-lg font-medium">{req.borrower.name} veut avoir</p>
-                                    <strong className="block text-xl">{req.book.title}</strong>
-                                    <em className="text-gray-600">({req.status})</em>
+                                    <p className="text-gray-300">
+                                        <i className="bi bi-calendar-event-fill mr-2"></i>
+                                        {new Date(req.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                                    </p>
+                                    <p className="text-lg font-medium">
+                                        <i className="bi bi-person-fill text-gray-500 mr-2"></i>
+                                        {req.borrower.name} veut avoir
+                                    </p>
+                                    <strong className="block text-xl">
+                                        <i className="bi bi-book text-gray-600 mr-2"></i>
+                                        {req.book.title}
+                                    </strong>
+                                    <em className="text-gray-600">
+                                        <i className="bi bi-info-circle-fill text-gray-500 mr-2"></i>
+                                        {req.status==="pending"?"En attente":req.status==="approved"?"Approuvé":"Rejeté"}
+                                    </em>
                                     {req.status==="pending" && (
                                         <div className="mt-4 flex justify-between">
                                             <button
                                                 onClick={()=>handleAccept(req._id)}
                                                 className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600"
-                                            >Accepter</button>
+                                            >
+                                                <i className="bi bi-check-circle-fill mr-2"></i>
+                                                Accepter
+                                            </button>
                                             <button
                                                 onClick={()=>handleDecline(req._id)}
                                                 className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600"
-                                            >Refuser</button>
+                                            >
+                                                <i className="bi bi-x-circle-fill mr-2"></i>
+                                                Refuser
+                                            </button>
                                         </div>
                                     )}
                                 </div>
