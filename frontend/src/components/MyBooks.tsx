@@ -9,7 +9,7 @@ const MyBooks=()=>
     const { user }=useContext(AuthContext)!;
     const navigate=useNavigate();
     const [books, setBooks]=useState<any[]>([]);
-    const [newBook, setNewBook]=useState({ title: "", author: "", category: BookCategory });
+    const [newBook, setNewBook]=useState({ title: "", author: "", category: BookCategory, isbn: "", publisher: "", publicationYear: "" });
     const [showForm, setShowForm]=useState(false);
     const [editingBook, setEditingBook]=useState<any>(null);
     useEffect(()=>
@@ -37,11 +37,15 @@ const MyBooks=()=>
     };
     const handleAddBook=async()=>
     {
-        if (!newBook.title || !newBook.author || !newBook.category) return;
+        if (!newBook.title || !newBook.author || !newBook.category || !newBook.isbn || !newBook.publisher || !newBook.publicationYear)
+        {
+            alert("Veuillez remplir tous les champs !");
+            return;
+        }
         try
         {
             await addBook(newBook);
-            setNewBook({ title: "", author: "", category: BookCategory });
+            setNewBook({ title: "", author: "", category: BookCategory, isbn: "", publisher: "", publicationYear: "" });
             setShowForm(false);
             fetchBooks();
         }
@@ -52,11 +56,15 @@ const MyBooks=()=>
     };
     const handleUpdateBook=async()=>
     {
-        if (!newBook.title || !newBook.author || !newBook.category) return;
+        if (!newBook.title || !newBook.author || !newBook.category || !newBook.isbn || !newBook.publisher || !newBook.publicationYear)
+        {
+            alert("Veuillez remplir tous les champs !");
+            return;
+        }
         try
         {
             await updateBook(editingBook._id, newBook);
-            setNewBook({ title: "", author: "", category: BookCategory });
+            setNewBook({ title: "", author: "", category: BookCategory, isbn: "", publisher: "", publicationYear: "" });
             setEditingBook(null);
             setShowForm(false);
             fetchBooks();
@@ -81,7 +89,7 @@ const MyBooks=()=>
     const handleEdit=(book: any)=>
     {
         setEditingBook(book);
-        setNewBook({ title: book.title, author: book.author, category: book.category });
+        setNewBook({ title: book.title, author: book.author, category: book.category, isbn: book.isbn, publisher: book.publisher, publicationYear: book.publicationYear });
         setShowForm(true);
     };
     return (
@@ -105,7 +113,7 @@ const MyBooks=()=>
                             type="text"
                             placeholder="Titre"
                             value={newBook.title}
-                            onChange={(e) => setNewBook({ ...newBook, title: e.target.value })}
+                            onChange={(e)=>setNewBook({ ...newBook, title: e.target.value })}
                             className="p-3 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
                         />
                         <input
@@ -117,9 +125,30 @@ const MyBooks=()=>
                         />
                         <select
                             value={newBook.category}
-                            onChange={(e) => setNewBook({ ...newBook, category: e.target.value as BookCategory })}
+                            onChange={(e)=>setNewBook({ ...newBook, category: e.target.value as BookCategory })}
                             className="p-3 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
                         >{Object.values(BookCategory).map((cat)=>(<option key={cat} value={cat}>{cat}</option>))}</select>
+                        <input
+                            type="text"
+                            placeholder="ISBN"
+                            value={newBook.isbn}
+                            onChange={(e) => setNewBook({ ...newBook, isbn: e.target.value })}
+                            className="p-3 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        />
+                        <input
+                            type="text"
+                            placeholder="Maison d'édition"
+                            value={newBook.publisher}
+                            onChange={(e) => setNewBook({ ...newBook, publisher: e.target.value })}
+                            className="p-3 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        />
+                        <input
+                            type="number"
+                            placeholder="Année de publication"
+                            value={newBook.publicationYear}
+                            onChange={(e)=>setNewBook({ ...newBook, publicationYear: parseInt(e.target.value) })}
+                            className="p-3 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        />
                         <button
                             onClick={editingBook?handleUpdateBook:handleAddBook}
                             className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600"
@@ -127,9 +156,9 @@ const MyBooks=()=>
                     </div>
                 )}
                 <ul className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {books.length>0?(
-                        books.map((book)=>(
-                            <div key={book._id} className="shadow-md rounded-lg p-4 bg-white">
+                    {books.length>0?(books.map((book)=>
+                    (
+                        <div key={book._id} className="shadow-md rounded-lg p-4 bg-white">
                             <h3 className="text-lg font-semibold">
                                 <i className="bi bi-book text-gray-500 mr-2"></i>
                                 {book.title}
@@ -142,6 +171,18 @@ const MyBooks=()=>
                                 <i className="bi bi-tags-fill text-gray-500 mr-2"></i>
                                 Catégorie: {book.category}
                             </p>
+                            <p className="text-gray-600">
+                                <i className="bi bi-upc-scan text-gray-500 mr-2"></i>
+                                ISBN: {book.isbn}
+                            </p>
+                            <p className="text-gray-600">
+                                <i className="bi bi-building text-gray-500 mr-2"></i>
+                                Maison d'édition: {book.publisher}
+                            </p>
+                            <p className="text-gray-600">
+                                <i className="bi bi-calendar text-gray-500 mr-2"></i>
+                                Année de publication: {book.publicationYear}
+                            </p>
                             <div className="mt-4 flex justify-between">
                                 <button
                                     onClick={()=>handleEdit(book)}
@@ -151,7 +192,7 @@ const MyBooks=()=>
                                     Modifier
                                 </button>
                                 <button
-                                    onClick={() => handleDelete(book._id)}
+                                    onClick={()=>handleDelete(book._id)}
                                     className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600"
                                 >
                                     <i className="bi bi-trash-fill mr-2"></i>

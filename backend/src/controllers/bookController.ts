@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import Book from "../models/Book";
 import { AuthRequest } from "../middleware/authMiddleware";
 
-export const getBooks=async(req: AuthRequest, res: Response) : Promise<any> =>
+export const getBooks=async(req: AuthRequest, res: Response): Promise<any> =>
 {
     try
     {
@@ -15,7 +15,7 @@ export const getBooks=async(req: AuthRequest, res: Response) : Promise<any> =>
     }
 };
 
-export const getBooksByUser=async(req: AuthRequest, res: Response) : Promise<any> =>
+export const getBooksByUser=async(req: AuthRequest, res: Response): Promise<any> =>
 {
     try
     {
@@ -28,17 +28,18 @@ export const getBooksByUser=async(req: AuthRequest, res: Response) : Promise<any
     }
 };
 
-export const addBook=async(req: AuthRequest, res: Response) : Promise<any> =>
+export const addBook=async(req: AuthRequest, res: Response): Promise<any> =>
 {
-    const { title, author, category }=req.body;
+    const { title, author, category, isbn, publisher, publicationYear }=req.body;
     try
     {
-        const newBook=new Book({ title, author, category, owner: req.user._id});
+        const newBook=new Book({ title, author, category, isbn, publisher, publicationYear, owner: req.user._id });
         await newBook.save();
         req.user.booksOwned.push(newBook._id);
         await req.user.save();
         res.status(201).json(newBook);
-    } catch (error)
+    }
+    catch (error)
     {
         res.status(500).json({ message: "Error adding book" });
     }
@@ -47,10 +48,10 @@ export const addBook=async(req: AuthRequest, res: Response) : Promise<any> =>
 export const updateBook=async(req: AuthRequest, res: Response): Promise<any> =>
 {
     const { id }=req.params;
-    const { title, author, category }=req.body;
+    const { title, author, category, isbn, publisher, publicationYear }=req.body;
     try
     {
-        const book=await Book.findOneAndUpdate({ _id: id, owner: req.user._id }, { title, author, category }, { new: true });
+        const book=await Book.findOneAndUpdate({ _id: id, owner: req.user._id }, { title, author, category, isbn, publisher, publicationYear }, { new: true });
         if (!book)
         {
             res.status(404).json({ message: "Book not found" });

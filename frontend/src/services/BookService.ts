@@ -29,13 +29,13 @@ export const getBooksByUser=async()=>
     return response.data;
 };
 
-export const addBook=async(bookData: { title: string; author: string; category: BookCategory })=>
+export const addBook=async(bookData: { title: string; author: string; category: BookCategory; isbn: string; publisher: string; publicationYear: number })=>
 {
     const response=await api.post(API_URL, bookData, { withCredentials: true });
     return response.data;
 };
 
-export const updateBook=async(id: string, updatedData: { title: string; author: string; category: BookCategory })=>
+export const updateBook=async(id: string, updatedData: { title: string; author: string; category: BookCategory; isbn: string; publisher: string; publicationYear: number })=>
 {
     const response=await api.put(`${API_URL}/${id}`, updatedData, { withCredentials: true });
     return response.data;
