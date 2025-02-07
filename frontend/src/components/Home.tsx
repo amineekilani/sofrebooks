@@ -133,7 +133,7 @@ function Home()
                                     </strong>
                                     <em className="text-gray-600">
                                         <i className="bi bi-info-circle-fill text-gray-500 mr-2"></i>
-                                        {req.status==="pending"?"En attente":req.status==="approved"?"Approuvé":"Rejeté"}
+                                        {req.status==="pending"?"En attente":req.status==="approved"?"Approuvé":req.status==="rejected"?"Rejeté":"Retoruné"}
                                     </em>
                                     {req.status==="pending" && (
                                         <div className="mt-4 flex justify-between">

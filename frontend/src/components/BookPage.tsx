@@ -26,7 +26,6 @@ function BookPage()
             try
             {
                 const data=await getBookById(id!);
-                console.log(data);
                 setBook(data);
             }
             catch (error)
@@ -53,6 +52,10 @@ function BookPage()
             setError("Demande déja envoyée");
         }
     };
+    const totalRatings=book.likes+book.dislikes+book.neutral;
+    const likesPercentage=(book.likes/totalRatings)*100;
+    const dislikesPercentage=(book.dislikes/totalRatings)*100;
+    const neutralPercentage=(book.neutral/totalRatings)*100;
     return (
         <div className="flex min-h-screen bg-gray-100">
             <Navbar />
@@ -76,7 +79,7 @@ function BookPage()
                             <span className="font-semibold">Propriétaire:</span> {book.owner?.name}
                         </p>
                         <p>
-                            <i className={`bi ${book.isAvailable ? "bi-check-circle-fill text-green-600" : "bi-x-circle-fill text-red-600"} mr-2`}></i>
+                            <i className={`bi ${book.isAvailable?"bi-check-circle-fill text-green-600":"bi-x-circle-fill text-red-600"} mr-2`}></i>
                             <span className="font-semibold">Statut:</span>{" "}
                             <span
                                 className={`px-2 py-1 rounded-md ${book.isAvailable?"bg-green-200 text-green-700":"bg-red-200 text-red-700"}`}
@@ -89,14 +92,44 @@ function BookPage()
                             </p>
                         )}
                     </div>
-                    {error && (<p className="mt-3 text-sm text-red-600 bg-red-100 p-2 rounded-md"><i className="bi bi-exclamation-circle-fill mr-2"></i> {error}</p>)}
+                    <div className="mt-6">
+                        <h2 className="text-xl font-semibold text-gray-900 mb-2">Réactions des lecteurs</h2>
+                        <div className="w-full h-6 bg-gray-200 rounded-full overflow-hidden flex">
+                            <div
+                                className="h-full bg-green-400"
+                                style={{ width: `${likesPercentage}%` }}
+                                title={`J'aime: ${likesPercentage.toFixed(2)}%`}
+                            ></div>
+                            <div
+                                className="h-full bg-gray-300"
+                                style={{ width: `${neutralPercentage}%` }}
+                                title={`Neutre: ${neutralPercentage.toFixed(2)}%`}
+                            ></div>
+                            <div
+                                className="h-full bg-red-400"
+                                style={{ width: `${dislikesPercentage}%` }}
+                                title={`Je n'aime pas: ${dislikesPercentage.toFixed(2)}%`}
+                            ></div>
+                        </div>
+                        <div className="mt-2 flex justify-between text-sm text-gray-600">
+                            <span>J'aime: {book.likes}</span>
+                            <span>Neutre: {book.neutral}</span>
+                            <span>Je n'aime pas: {book.dislikes}</span>
+                        </div>
+                    </div>
+
+                    {error && (
+                        <p className="mt-3 text-sm text-red-600 bg-red-100 p-2 rounded-md">
+                            <i className="bi bi-exclamation-circle-fill mr-2"></i> {error}
+                        </p>
+                    )}
                     <div className="mt-6">
                         <button
                             className={`w-full px-5 py-2 text-white font-semibold rounded-lg transition ${!book.isAvailable || isOwner?"bg-gray-400 cursor-not-allowed":"bg-blue-600 hover:bg-blue-700"}`}
                             disabled={!book.isAvailable || isOwner}
                             onClick={handleRequest}
                         >
-                            <i className={`bi ${requested ? "bi-envelope-check-fill" : "bi-cart-plus-fill"} mr-2`}></i>
+                            <i className={`bi ${requested?"bi-envelope-check-fill":"bi-cart-plus-fill"} mr-2`}></i>
                             {requested?"Demande envoyée":"Réserver"}
                         </button>
                     </div>

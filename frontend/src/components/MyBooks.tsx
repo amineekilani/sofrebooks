@@ -76,6 +76,10 @@ const MyBooks=()=>
     };
     const handleDelete=async(id: string)=>
     {
+        if (!confirm("Êtes-vous sûr de vouloir supprimer ce livre ?"))
+        {
+            return;
+        }
         try
         {
             await deleteBook(id);
