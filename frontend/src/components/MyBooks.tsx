@@ -64,7 +64,7 @@ const MyBooks=()=>
         try
         {
             await updateBook(editingBook._id, newBook);
-            setNewBook({ title: "", author: "", category: BookCategory, isbn: "", publisher: "", publicationYear: "" });
+            setNewBook({ title: "", author: "", category: BookCategory.Fiction, isbn: "", publisher: "", publicationYear: "" });
             setEditingBook(null);
             setShowForm(false);
             fetchBooks();

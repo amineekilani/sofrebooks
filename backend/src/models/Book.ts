@@ -3,15 +3,15 @@ import mongoose from "mongoose";
 export enum BookCategory
 {
     Fiction="Fiction",
-    NonFiction="Non-Fiction",
-    Educational="Educational & Academic",
-    Children="Children's & Young Adult",
-    Comics="Comics & Graphic Novels",
-    Religious="Religious & Spiritual",
-    Science="Science & Technology",
-    Business="Business & Economics",
-    SelfHelp="Self-Help & Personal Development",
-    Lifestyle="Hobbies & Lifestyle"
+    NonFiction="Non-fiction",
+    Educational="Éducatif et académique",
+    Children="Enfants et jeunes adultes",
+    Comics="Bandes dessinées et romans graphiques",
+    Religious="Religieux et spirituel",
+    Science="Sciences et technologies",
+    Business="Affaires et économie",
+    SelfHelp="Développement personnel et autonomie",
+    Lifestyle="Loisirs et style de vie"
 }
 
 const bookSchema=new mongoose.Schema
@@ -26,7 +26,10 @@ const bookSchema=new mongoose.Schema
         isAvailable: { type: Boolean, required: true, default: true },
         owner: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
         borrower: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
-        loans: { type: [mongoose.Schema.Types.ObjectId], ref: "LoanRequest", default: [] }
+        loans: { type: [mongoose.Schema.Types.ObjectId], ref: "LoanRequest", default: [] },
+        likes: { type: Number, required: true, default: 0 },
+        dislikes: { type: Number, required: true, default: 0 },
+        neutral: { type: Number, required: true, default: 0 }
     },
     {
         timestamps: true

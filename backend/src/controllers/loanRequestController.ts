@@ -4,8 +4,7 @@ import Book from "../models/Book";
 import { AuthRequest } from "../middleware/authMiddleware";
 import mongoose from "mongoose";
 
-
-export const requestLoan=async(req: AuthRequest, res: Response) : Promise<any> =>
+export const requestLoan=async(req: AuthRequest, res: Response): Promise<any> =>
 {
     try
     {
@@ -31,7 +30,8 @@ export const requestLoan=async(req: AuthRequest, res: Response) : Promise<any> =
     }
     catch (error)
     {
-        res.status(500).json({ message: "Error requesting loan" });
+        console.error("Error requesting loan:", error);
+        res.status(500).json({ message: "Internal server error" });
     }
 };
 
@@ -45,7 +45,8 @@ export const getLoanRequestsForOwner=async(req: AuthRequest, res: Response)=>
     }
     catch (error)
     {
-        res.status(500).json({ message: "Error fetching loan requests" });
+        console.error("Error fetching loan requests:", error);
+        res.status(500).json({ message: "Internal server error" });
     }
 };
 
@@ -54,12 +55,13 @@ export const getLoanRequestsForBorrower=async(req: AuthRequest, res: Response)=>
     try
     {
         const borrowerId=req.user._id;
-        const loanRequests=await LoanRequest.find({ borrower: borrowerId }).populate("book", "title author");
+        const loanRequests=await LoanRequest.find({ borrower: borrowerId }).populate("book", "title author").then(requests=>requests.filter(req=>req.book!==null));
         res.json(loanRequests);
     }
     catch (error)
     {
-        res.status(500).json({ message: "Error fetching loan requests" });
+        console.error("Error fetching loan requests:", error);
+        res.status(500).json({ message: "Internal server error" });
     }
 };
 
@@ -79,17 +81,16 @@ export const acceptLoanRequest=async(req: AuthRequest, res: Response): Promise<a
         {
             return res.status(404).json({ message: "Book not found" });
         }
-        console.log("Book data is:", book);
         book.isAvailable=false;
         book.borrower=loanRequest.borrower;
         await book.save();
         await loanRequest.save();
-        res.json({ message: "Loan request rejected" });
+        res.json({ message: "Loan request accepted" });
     }
     catch (error)
     {
-        console.error("Error rejecting loan request:", error);
-        res.status(500).json({ message: "Error rejecting loan request" });
+        console.error("Error accepting loan request:", error);
+        res.status(500).json({ message: "Internal server error" });
     }
 };
 
@@ -98,26 +99,19 @@ export const declineLoanRequest=async(req: AuthRequest, res: Response): Promise<
     try
     {
         const { requestId }=req.params;
-        const loanRequest = await LoanRequest.findById(requestId);
+        const loanRequest=await LoanRequest.findById(requestId);
         if (!loanRequest)
         {
             return res.status(404).json({ message: "Loan request not found" });
         }
-        loanRequest.status="rejected";
-        const book = await Book.findById(loanRequest.book);
-        if (!book)
-        {
-            return res.status(404).json({ message: "Book not found" });
-        }
-        book.borrower=req.user;
-        await book.save();
+        loanRequest.status = "rejected";
         await loanRequest.save();
         res.json({ message: "Loan request rejected" });
     }
     catch (error)
     {
         console.error("Error rejecting loan request:", error);
-        res.status(500).json({ message: "Error rejecting loan request" });
+        res.status(500).json({ message: "Internal server error" });
     }
 };
 
@@ -126,6 +120,11 @@ export const returnBook=async(req: AuthRequest, res: Response): Promise<any> =>
     try
     {
         const { requestId }=req.params;
+        const { feedback }=req.body;
+        if (!["like", "dislike", "neutral"].includes(feedback))
+        {
+            return res.status(400).json({ message: "Invalid feedback value" });
+        }
         const loanRequest=await LoanRequest.findById(requestId);
         if (!loanRequest)
         {
@@ -140,8 +139,20 @@ export const returnBook=async(req: AuthRequest, res: Response): Promise<any> =>
         {
             return res.status(404).json({ message: "Book not found" });
         }
+        if (feedback==="like")
+        {
+            book.likes++;
+        }
+        else if (feedback==="dislike")
+        {
+            book.dislikes++;
+        }
+        else if (feedback==="neutral")
+        {
+            book.neutral++;
+        }
         book.isAvailable=true;
-        book.borrower=undefined as unknown as mongoose.Types.ObjectId;;
+        book.borrower=undefined as unknown as mongoose.Types.ObjectId;
         await book.save();
         loanRequest.status="returned";
         await loanRequest.save();
@@ -150,6 +161,6 @@ export const returnBook=async(req: AuthRequest, res: Response): Promise<any> =>
     catch (error)
     {
         console.error("Error returning book:", error);
-        res.status(500).json({ message: "Error returning book" });
+        res.status(500).json({ message: "Internal server error" });
     }
 };
