@@ -9,7 +9,7 @@ const MyBooks=()=>
     const { user }=useContext(AuthContext)!;
     const navigate=useNavigate();
     const [books, setBooks]=useState<any[]>([]);
-    const [newBook, setNewBook]=useState({ title: "", author: "", category: BookCategory, isbn: "", publisher: "", publicationYear: "" });
+    const [newBook, setNewBook]=useState({ title: "", author: "", category: BookCategory.Fiction, isbn: "", publisher: "", publicationYear: "" });
     const [showForm, setShowForm]=useState(false);
     const [editingBook, setEditingBook]=useState<any>(null);
     useEffect(()=>
@@ -45,7 +45,7 @@ const MyBooks=()=>
         try
         {
             await addBook(newBook);
-            setNewBook({ title: "", author: "", category: BookCategory, isbn: "", publisher: "", publicationYear: "" });
+            setNewBook({ title: "", author: "", category: BookCategory.Fiction, isbn: "", publisher: "", publicationYear: "" });
             setShowForm(false);
             fetchBooks();
         }
