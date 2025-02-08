@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import * as XLSX from "xlsx";
 import { addBook, updateBook, deleteBook, getBooksByUser, BookCategory } from "../services/BookService";
 import Navbar from "./Navbar";
 import { AuthContext } from "../context/AuthContext";
@@ -96,6 +97,26 @@ const MyBooks=()=>
         setNewBook({ title: book.title, author: book.author, category: book.category, isbn: book.isbn, publisher: book.publisher, publicationYear: book.publicationYear });
         setShowForm(true);
     };
+    const handleExportCSV=()=>
+    {
+        if (books.length===0)
+        {
+            alert("Aucun livre à exporter.");
+            return;
+        }
+        const worksheet=XLSX.utils.json_to_sheet(books.map(book=>
+        ({
+            "Titre": book.title,
+            "Auteur": book.author,
+            "Catégorie": book.category,
+            "ISBN": book.isbn,
+            "Maison d'édition": book.publisher,
+            "Année de publication": book.publicationYear
+        })));
+        const workbook=XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Mes Livres");
+        XLSX.writeFile(workbook, "Mes Livres.xlsx");
+    };
     return (
         <div className="flex min-h-screen">
             <Navbar />
@@ -110,6 +131,13 @@ const MyBooks=()=>
                 >
                     <i className={`bi ${showForm ? "bi-x-circle" : "bi-plus-circle"} mr-2`}></i>
                     {showForm?"Annuler":"Ajouter un livre"}
+                </button>
+                <button
+                    onClick={handleExportCSV}
+                    className="bg-purple-500 text-white py-2 px-4 rounded-md hover:bg-purple-600 ml-4"
+                >
+                    <i className="bi bi-file-earmark-spreadsheet mr-2"></i>
+                    Exporter en CSV
                 </button>
                 {showForm && (
                     <div className="mt-6 space-y-4">
