@@ -33,7 +33,7 @@ export const registerUser=asyncHandler(async(req: Request, res: Response)=>
     {
         throw new Error("Please add all fields");
     }    
-    const userExists = await User.findOne({ email });
+    const userExists=await User.findOne({ email });
     if (userExists)
     {
         throw new Error("User already exists");
@@ -43,7 +43,7 @@ export const registerUser=asyncHandler(async(req: Request, res: Response)=>
     const user=await User.create({ name, email, password: hashedPassword });
     if (user)
     {
-        const accessToken= generateAccessToken(user.id);
+        const accessToken=generateAccessToken(user.id);
         const refreshToken=generateRefreshToken(user.id);
         setTokenCookies(res, accessToken, refreshToken);
         res.status(201).json({ _id: user.id, name: user.name, email: user.email });

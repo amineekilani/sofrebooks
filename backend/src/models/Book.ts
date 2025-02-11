@@ -24,12 +24,12 @@ const bookSchema=new mongoose.Schema
         publisher: { type: String, required: true },
         publicationYear: { type: Number, required: true },
         isAvailable: { type: Boolean, required: true, default: true },
-        owner: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-        borrower: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
         loans: { type: [mongoose.Schema.Types.ObjectId], ref: "LoanRequest", default: [] },
         likes: { type: Number, required: true, default: 0 },
+        neutral: { type: Number, required: true, default: 0 },
         dislikes: { type: Number, required: true, default: 0 },
-        neutral: { type: Number, required: true, default: 0 }
+        owner: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+        borrower: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
     },
     {
         timestamps: true
