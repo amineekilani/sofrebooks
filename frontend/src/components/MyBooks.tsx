@@ -97,7 +97,7 @@ const MyBooks=()=>
         setNewBook({ title: book.title, author: book.author, category: book.category, isbn: book.isbn, publisher: book.publisher, publicationYear: book.publicationYear });
         setShowForm(true);
     };
-    const handleExportCSV=()=>
+    const handleExportXLSX=()=>
     {
         if (books.length===0)
         {
@@ -133,11 +133,11 @@ const MyBooks=()=>
                     {showForm?"Annuler":"Ajouter un livre"}
                 </button>
                 <button
-                    onClick={handleExportCSV}
+                    onClick={handleExportXLSX}
                     className="bg-purple-500 text-white py-2 px-4 rounded-md hover:bg-purple-600 ml-4"
                 >
                     <i className="bi bi-file-earmark-spreadsheet mr-2"></i>
-                    Exporter en CSV
+                    Exporter en Excel
                 </button>
                 {showForm && (
                     <div className="mt-6 space-y-4">
