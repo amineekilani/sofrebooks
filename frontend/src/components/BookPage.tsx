@@ -117,7 +117,14 @@ function BookPage()
                             <span>Je n'aime pas: {book.dislikes}</span>
                         </div>
                     </div>
-
+                    <div className="mt-6">
+                        <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                            <i className="bi bi-file-text text-gray-600 mr-2"></i> Résumé du livre <em className="text-gray-300">(généré par IA)</em>
+                        </h2>
+                        <div className="bg-gray-50 border-l-4 border-blue-500 p-4 rounded-md shadow-sm text-gray-700">
+                            <p className="leading-relaxed text-md">{book.summary}</p>
+                        </div>
+                    </div>
                     {error && (
                         <p className="mt-3 text-sm text-red-600 bg-red-100 p-2 rounded-md">
                             <i className="bi bi-exclamation-circle-fill mr-2"></i> {error}
