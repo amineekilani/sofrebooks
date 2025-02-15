@@ -38,6 +38,15 @@ const bookSchema=new mongoose.Schema
     }
 );
 
+interface AIResponse
+{
+    choices: Array<{
+        message: {
+            content: string;
+        };
+    }>;
+}
+
 async function generateSummary(title: string, author: string): Promise<string>
 {
     try
@@ -62,7 +71,7 @@ async function generateSummary(title: string, author: string): Promise<string>
                 }
             )
         });
-        const data=await response.json();
+        const data=await response.json() as AIResponse;
         return data.choices[0]?.message?.content?.trim() || "Summary unavailable.";
     }
     catch (error)
