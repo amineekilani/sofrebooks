@@ -25,7 +25,6 @@ const bookSchema=new mongoose.Schema
         publisher: { type: String, required: true },
         publicationYear: { type: Number, required: true },
         isAvailable: { type: Boolean, required: true, default: true },
-        loans: { type: [mongoose.Schema.Types.ObjectId], ref: "LoanRequest", default: [] },
         likes: { type: Number, required: true, default: 0 },
         neutral: { type: Number, required: true, default: 0 },
         dislikes: { type: Number, required: true, default: 0 },

@@ -5,9 +5,7 @@ const userSchema=new mongoose.Schema
     {
         name: { type: String, required: true },
         email: { type: String, required: true, unique: true },
-        password: { type: String, required: true },
-        booksOwned: { type: [mongoose.Schema.Types.ObjectId], ref: "Book", default: [] },
-        loanRequests: { type: [mongoose.Schema.Types.ObjectId], ref: "LoanRequest", default: [] },
+        password: { type: String, required: true }
     },
     { timestamps: true }
 );

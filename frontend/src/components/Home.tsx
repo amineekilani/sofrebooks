@@ -102,7 +102,7 @@ function Home()
                     <ul>
                         {filteredBooks.length>0?(filteredBooks.map((book)=>(
                             <li key={book._id}>
-                                <Link to={`/books/${book._id}`} className="text-orange-600 hover:text-orange-500">
+                                <Link to={`/livres/${book._id}`} className="text-orange-600 hover:text-orange-500">
                                 <i className="bi bi-journal-bookmark-fill text-orange-500 mr-2"></i>
                                     {book.title} de {book.author} ({book.category})
                                 </Link>

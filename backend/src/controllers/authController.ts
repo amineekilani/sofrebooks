@@ -17,7 +17,7 @@ const generateAccessToken=(id: string)=>
 
 const generateRefreshToken=(id: string)=>
 {
-    return jwt.sign({ id, type: 'refresh' }, process.env.JWT_REFRESH_SECRET!, { expiresIn: "7d" });
+    return jwt.sign({ id, type: "refresh" }, process.env.JWT_REFRESH_SECRET!, { expiresIn: "7d" });
 };
 
 const setTokenCookies=(res: Response, accessToken: string, refreshToken: string)=>
@@ -101,7 +101,7 @@ export const refreshToken=asyncHandler(async(req: Request, res: Response)=>
     catch (error)
     {
         res.status(401);
-        throw new Error('Invalid refresh token');
+        throw new Error("Invalid refresh token");
     }
 });
 

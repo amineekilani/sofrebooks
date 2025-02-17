@@ -35,7 +35,6 @@ export const addBook=async(req: AuthRequest, res: Response): Promise<any> =>
     {
         const newBook=new Book({ title, author, category, isbn, publisher, publicationYear, owner: req.user._id });
         await newBook.save();
-        req.user.booksOwned.push(newBook._id);
         await req.user.save();
         res.status(201).json(newBook);
     }

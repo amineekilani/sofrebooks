@@ -15,15 +15,15 @@ function Navbar()
                         {user && (
                             <>
                                 <div className="space-y-2">
-                                    <Link to="/mybooks" className="block text-orange-600 hover:text-orange-500">
+                                    <Link to="/livres" className="block text-orange-600 hover:text-orange-500">
                                         <i className="bi bi-book mr-2"></i>
                                         Mes Livres
                                     </Link>
-                                    <Link to="/myrequests" className="block text-orange-600 hover:text-orange-500">
+                                    <Link to="/demandes" className="block text-orange-600 hover:text-orange-500">
                                         <i className="bi bi-journal-check mr-2"></i>
                                         Mes Demandes
                                     </Link>
-                                    <Link to="/statistics" className="block text-orange-600 hover:text-orange-500">
+                                    <Link to="/statistiques" className="block text-orange-600 hover:text-orange-500">
                                         <i className="bi bi-bar-chart-line mr-2"></i>
                                         Statistiques
                                     </Link>
