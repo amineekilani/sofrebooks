@@ -13,6 +13,7 @@ const MyBooks=()=>
     const [newBook, setNewBook]=useState({ title: "", author: "", category: BookCategory.Fiction, isbn: "", publisher: "", publicationYear: "" });
     const [showForm, setShowForm]=useState(false);
     const [editingBook, setEditingBook]=useState<any>(null);
+    const [loading, setLoading] = useState(false);
     useEffect(()=>
     {
         if (!user)
@@ -43,6 +44,7 @@ const MyBooks=()=>
             alert("Veuillez remplir tous les champs !");
             return;
         }
+        setLoading(true); // Début du chargement
         try
         {
             await addBook(newBook);
@@ -53,6 +55,10 @@ const MyBooks=()=>
         catch (error)
         {
             console.error("Error adding book", error);
+        }
+        finally
+        {
+            setLoading(false); // Fin du chargement
         }
     };
     const handleUpdateBook=async()=>
@@ -187,6 +193,7 @@ const MyBooks=()=>
                         >{editingBook?"Modifier":"Confirmer"}</button>
                     </div>
                 )}
+                {loading && <div className="loading-spinner">Ajout en cours...</div>}
                 <ul className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {books.length>0?(books.map((book)=>
                     (
@@ -237,6 +244,6 @@ const MyBooks=()=>
             </main>
         </div>
     );
-};
+}
 
 export default MyBooks;

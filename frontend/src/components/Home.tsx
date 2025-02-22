@@ -4,7 +4,6 @@ import { Link, useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 import { getBooks, getLoanRequestsForOwner } from "../services/BookService";
 import api from "../services/api";
-import Footer from "./Footer";
 
 function Home()
 {
@@ -108,13 +107,13 @@ function Home()
                                     {book.title} de {book.author} ({book.category})
                                 </Link>
                             </li>
-                        ))):(<p>Pas de livres trouvés.</p>)}
+                        ))):(<p className="col-span-full text-center text-gray-500">Pas de livres trouvés.</p>)}
                     </ul>
                 )}
                 <h3 className="text-2xl font-semibold mb-4">
-                <i className="bi bi-check-circle-fill text-green-500 mr-2"></i>
-                            Livres Disponibles
-                        </h3>
+                    <i className="bi bi-check-circle-fill text-green-500 mr-2"></i>
+                    Livres Disponibles
+                </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {availableBooks.length>0?(
                         availableBooks.map((book)=>(
@@ -127,56 +126,56 @@ function Home()
                                     Consulter le livre
                                 </Link>
                             </div>
-                    ))):(<p>Aucun livre disponible.</p>)}
+                    ))):(<p className="col-span-full text-center text-gray-500">Aucun livre disponible.</p>)}
                 </div>
-                {ownerLoanRequests.length>0 && (
-                    <div>
-                        <h3 className="text-2xl font-semibold mt-4 mb-4">
-                            <i className="bi bi-hourglass-split text-orange-500 mr-2"></i>
-                            Demandes De Prêt Pour Vos Livres
-                        </h3>
-                        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {ownerLoanRequests.length>0?(ownerLoanRequests.sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt)).map((req)=>(
-                                <div key={req._id} className="shadow-md rounded-lg p-4 bg-white">
-                                    <p className="text-gray-300">
-                                        <i className="bi bi-calendar-event-fill mr-2"></i>
-                                        {new Date(req.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
-                                    </p>
-                                    <p className="text-lg font-medium">
-                                        <i className="bi bi-person-fill text-gray-500 mr-2"></i>
-                                        {req.borrower.name} veut avoir
-                                    </p>
-                                    <strong className="block text-xl">
-                                        <i className="bi bi-book text-gray-600 mr-2"></i>
-                                        {req.book.title}
-                                    </strong>
-                                    <em className="text-gray-600">
-                                        <i className="bi bi-info-circle-fill text-gray-500 mr-2"></i>
-                                        {req.status==="pending"?"En attente":req.status==="approved"?"Approuvé":req.status==="rejected"?"Rejeté":"Retoruné"}
-                                    </em>
-                                    {req.status==="pending" && (
-                                        <div className="mt-4 flex justify-between">
-                                            <button
-                                                onClick={()=>handleAccept(req._id)}
-                                                className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600"
-                                            >
-                                                <i className="bi bi-check-circle-fill mr-2"></i>
-                                                Accepter
-                                            </button>
-                                            <button
-                                                onClick={()=>handleDecline(req._id)}
-                                                className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600"
-                                            >
-                                                <i className="bi bi-x-circle-fill mr-2"></i>
-                                                Refuser
-                                            </button>
-                                        </div>
-                                    )}
+                <h3 className="text-2xl font-semibold mt-4 mb-4">
+                    <i className="bi bi-hourglass-split text-orange-500 mr-2"></i>
+                    Demandes De Prêt Pour Vos Livres
+                </h3>
+                <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {ownerLoanRequests.length>0?(ownerLoanRequests.sort((a,b)=>new Date(b.createdAt).getTime()-new Date(a.createdAt).getTime()).map((req)=>(
+                        <div key={req._id} className="shadow-md rounded-lg p-4 bg-white">
+                            <p className="text-gray-300">
+                                <i className="bi bi-calendar-event-fill mr-2"></i>
+                                {new Date(req.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                            </p>
+                            <p className="text-lg font-medium">
+                                <i className="bi bi-person-fill text-gray-500 mr-2"></i>
+                                {req.borrower.name} veut avoir
+                            </p>
+                            <strong className="block text-xl">
+                                <i className="bi bi-book text-gray-600 mr-2"></i>
+                                {req.book.title}
+                            </strong>
+                            <em className="text-gray-600">
+                                <i className="bi bi-info-circle-fill text-gray-500 mr-2"></i>
+                                {
+                                    req.status==="pending"?"En attente":
+                                    req.status==="approved"?"Approuvé":
+                                    req.status==="rejected"?"Rejeté":"Retourné"
+                                }
+                            </em>
+                            {req.status==="pending" && (
+                                <div className="mt-4 flex justify-between">
+                                    <button
+                                        onClick={() => handleAccept(req._id)}
+                                        className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600"
+                                    >
+                                        <i className="bi bi-check-circle-fill mr-2"></i>
+                                        Accepter
+                                    </button>
+                                    <button
+                                        onClick={() => handleDecline(req._id)}
+                                        className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600"
+                                    >
+                                        <i className="bi bi-x-circle-fill mr-2"></i>
+                                        Refuser
+                                    </button>
                                 </div>
-                            ))):(<p className="col-span-full text-center text-gray-500">Pas de demandes.</p>)}
+                            )}
                         </div>
-                    </div>
-                )}
+                    ))):(<p className="col-span-full text-center text-gray-500">Aucune demande de prêt en attente.</p>)}
+                </div>
             </main>
         </div>
     );
