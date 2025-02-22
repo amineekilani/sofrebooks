@@ -65,7 +65,7 @@ async function generateSummary(title: string, author: string): Promise<string>
                     "messages": [
                     {
                         "role": "user",
-                        "content": `Generate a short summary of the book "${title}" by ${author}. In your response, do not include any titles or formatting—just start directly with plain text.`
+                        "content": `Generate a short summary of the book "${title}" by ${author}. In your response, do not include any titles or formatting—just start directly with plain text. The response must be in French`
                     }]
                 }
             )

@@ -45,6 +45,9 @@ function Navbar()
                             <i className="bi bi-box-arrow-right mr-2"></i>
                             Déconnexion
                         </button>
+                        <p className="text-gray-400 text-sm text-center mt-4">
+                            &copy; 2025 Amine Kilani chez Sofrecom<br/>Tous droits réservés
+                        </p>
                     </div>
                 )}
             </aside>

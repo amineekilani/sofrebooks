@@ -83,6 +83,7 @@ function Home()
         }
     };
     const filteredBooks=books.filter((book)=>book.title.toLowerCase().includes(searchTerm.toLowerCase()) || book.author.toLowerCase().includes(searchTerm.toLowerCase()) || book.category.toLowerCase().includes(searchTerm.toLowerCase()));
+    const availableBooks=books.filter(book=>book.isAvailable===true);
     return (
         <div className="flex min-h-screen">
             <Navbar />
@@ -110,9 +111,27 @@ function Home()
                         ))):(<p>Pas de livres trouvés.</p>)}
                     </ul>
                 )}
+                <h3 className="text-2xl font-semibold mb-4">
+                <i className="bi bi-check-circle-fill text-green-500 mr-2"></i>
+                            Livres Disponibles
+                        </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {availableBooks.length>0?(
+                        availableBooks.map((book)=>(
+                            <div key={book._id} className="shadow-md rounded-lg p-4 bg-white">
+                                <h4 className="text-lg font-semibold text-gray-700">{book.title}</h4>
+                                <p className="text-gray-500">{book.author}</p>
+                                <p className="text-gray-400 text-sm">{book.category}</p>
+                                <Link to={`/livres/${book._id}`} className="text-green-600 hover:text-green-500 mt-2 inline-block">
+                                    <i className="bi bi-book text-green-500 mr-2"></i>
+                                    Consulter le livre
+                                </Link>
+                            </div>
+                    ))):(<p>Aucun livre disponible.</p>)}
+                </div>
                 {ownerLoanRequests.length>0 && (
                     <div>
-                        <h3 className="text-2xl font-semibold mb-4">
+                        <h3 className="text-2xl font-semibold mt-4 mb-4">
                             <i className="bi bi-hourglass-split text-orange-500 mr-2"></i>
                             Demandes De Prêt Pour Vos Livres
                         </h3>
@@ -157,7 +176,6 @@ function Home()
                             ))):(<p className="col-span-full text-center text-gray-500">Pas de demandes.</p>)}
                         </div>
                     </div>
-                    
                 )}
             </main>
         </div>
