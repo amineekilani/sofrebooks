@@ -13,6 +13,8 @@ function Home()
     const [searchTerm, setSearchTerm]=useState("");
     const [searchTriggered, setSearchTriggered]=useState(false);
     const [ownerLoanRequests, setOwnerLoanRequests]=useState<any[]>([]);
+    const [currentPage, setCurrentPage]=useState(1);
+    const booksPerPage=3;
     useEffect(()=>
     {
         if (!user)
@@ -47,7 +49,7 @@ function Home()
         {
             console.error("Error fetching books:", error);
         }
-    };
+    }
     const handleSearch=(e: React.ChangeEvent<HTMLInputElement>)=>
     {
         setSearchTerm(e.target.value);
@@ -56,7 +58,7 @@ function Home()
             setSearchTriggered(true);
             fetchBooks();
         }
-    };
+    }
     const handleAccept=async(requestId: string)=>
     {
         try
@@ -68,7 +70,7 @@ function Home()
         {
             console.error("Error accepting loan request:", error);
         }
-    };
+    }
     const handleDecline=async(requestId: string)=>
     {
         try
@@ -80,9 +82,13 @@ function Home()
         {
             console.error("Error declining loan request:", error);
         }
-    };
+    }
     const filteredBooks=books.filter((book)=>book.title.toLowerCase().includes(searchTerm.toLowerCase()) || book.author.toLowerCase().includes(searchTerm.toLowerCase()) || book.category.toLowerCase().includes(searchTerm.toLowerCase()));
     const availableBooks=books.filter(book=>book.isAvailable===true);
+    const indexOfLastBook=currentPage * booksPerPage;
+    const indexOfFirstBook=indexOfLastBook-booksPerPage;
+    const currentBooks=availableBooks.slice(indexOfFirstBook, indexOfLastBook);
+    const totalPages=Math.ceil(availableBooks.length/booksPerPage);
     return (
         <div className="flex min-h-screen">
             <Navbar />
@@ -103,7 +109,7 @@ function Home()
                         {filteredBooks.length>0?(filteredBooks.map((book)=>(
                             <li key={book._id}>
                                 <Link to={`/livres/${book._id}`} className="text-orange-600 hover:text-orange-500">
-                                <i className="bi bi-journal-bookmark-fill text-orange-500 mr-2"></i>
+                                    <i className="bi bi-journal-bookmark-fill text-orange-500 mr-2"></i>
                                     {book.title} de {book.author} ({book.category})
                                 </Link>
                             </li>
@@ -115,19 +121,33 @@ function Home()
                     Livres Disponibles
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {availableBooks.length>0?(
-                        availableBooks.map((book)=>(
-                            <div key={book._id} className="shadow-md rounded-lg p-4 bg-white">
-                                <h4 className="text-lg font-semibold text-gray-700">{book.title}</h4>
-                                <p className="text-gray-500">{book.author}</p>
-                                <p className="text-gray-400 text-sm">{book.category}</p>
-                                <Link to={`/livres/${book._id}`} className="text-green-600 hover:text-green-500 mt-2 inline-block">
-                                    <i className="bi bi-book text-green-500 mr-2"></i>
-                                    Consulter le livre
-                                </Link>
-                            </div>
+                    {currentBooks.length>0?(currentBooks.map((book)=>(
+                        <div key={book._id} className="shadow-md rounded-lg p-4 bg-white">
+                            <h4 className="text-lg font-semibold text-gray-700">{book.title}</h4>
+                            <p className="text-gray-500">{book.author}</p>
+                            <p className="text-gray-400 text-sm">{book.category}</p>
+                            <Link to={`/livres/${book._id}`} className="text-green-600 hover:text-green-500 mt-2 inline-block">
+                                <i className="bi bi-book text-green-500 mr-2"></i>
+                                Consulter le livre
+                            </Link>
+                        </div>
                     ))):(<p className="col-span-full text-center text-gray-500">Aucun livre disponible.</p>)}
                 </div>
+                {totalPages>1 && (
+                    <div className="flex justify-center mt-6 space-x-4">
+                        <button
+                            onClick={()=>setCurrentPage(prev=>Math.max(prev-1,1))}
+                            disabled={currentPage===1}
+                            className={`py-2 px-4 rounded-lg ${currentPage===1?"bg-gray-300 cursor-not-allowed":"bg-orange-500 text-white hover:bg-orange-600"}`}
+                        >Précédent</button>
+                        <span className="text-gray-700 font-semibold">Page {currentPage} sur {totalPages}</span>
+                        <button
+                            onClick={()=>setCurrentPage(prev=>Math.min(prev+1,totalPages))}
+                            disabled={currentPage === totalPages}
+                            className={`py-2 px-4 rounded-lg ${currentPage === totalPages ? "bg-gray-300 cursor-not-allowed" : "bg-orange-500 text-white hover:bg-orange-600"}`}
+                        >Suivant</button>
+                    </div>
+                )}
                 <h3 className="text-2xl font-semibold mt-4 mb-4">
                     <i className="bi bi-hourglass-split text-orange-500 mr-2"></i>
                     Demandes De Prêt Pour Vos Livres
@@ -141,7 +161,7 @@ function Home()
                             </p>
                             <p className="text-lg font-medium">
                                 <i className="bi bi-person-fill text-gray-500 mr-2"></i>
-                                {req.borrower.name} veut avoir
+                                {req.borrower.name} veut emprunter
                             </p>
                             <strong className="block text-xl">
                                 <i className="bi bi-book text-gray-600 mr-2"></i>
