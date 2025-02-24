@@ -64,7 +64,12 @@ function MyRequests()
                         <li key={req._id} className="flex justify-between items-center p-4 bg-white rounded-md shadow-md">
                             <span>
                                 <i className="bi bi-book text-gray-500 mr-2"></i>
-                                Vous avez demandé <strong>{req.book ? req.book.title : "Unknown Book"}</strong> <em>({req.status})</em>
+                                {
+                                    req.status==="pending"?(<span>Votre demande pour <strong>${req.book.title}</strong> est en cours de traitement</span>)
+                                    :req.status==="approved"?(<span>Votre demande pour <strong>${req.book.title}</strong> a été acceptée</span>)
+                                    :req.status==="rejected"?(<span>Votre demande pour <strong>${req.book.title}</strong> a été rejetée</span>)
+                                    :(<span>Vous avez retourné <strong>${req.book.title}</strong></span>)
+                                }
                             </span>
                             {req.status==="approved" && (
                                 <div>
