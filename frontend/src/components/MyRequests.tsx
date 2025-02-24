@@ -65,10 +65,10 @@ function MyRequests()
                             <span>
                                 <i className="bi bi-book text-gray-500 mr-2"></i>
                                 {
-                                    req.status==="pending"?(<span>Votre demande pour <strong>${req.book.title}</strong> est en cours de traitement</span>)
-                                    :req.status==="approved"?(<span>Votre demande pour <strong>${req.book.title}</strong> a été acceptée</span>)
-                                    :req.status==="rejected"?(<span>Votre demande pour <strong>${req.book.title}</strong> a été rejetée</span>)
-                                    :(<span>Vous avez retourné <strong>${req.book.title}</strong></span>)
+                                    req.status==="pending"?(<span>Votre demande pour <strong>{req.book.title}</strong> est en cours de traitement</span>)
+                                    :req.status==="approved"?(<span>Votre demande pour <strong>{req.book.title}</strong> a été acceptée</span>)
+                                    :req.status==="rejected"?(<span>Votre demande pour <strong>{req.book.title}</strong> a été rejetée</span>)
+                                    :(<span>Vous avez retourné <strong>{req.book.title}</strong></span>)
                                 }
                             </span>
                             {req.status==="approved" && (
