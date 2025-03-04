@@ -122,7 +122,7 @@ function BookPage()
                             <i className="bi bi-file-text text-gray-600 mr-2"></i> Résumé du livre <em className="text-gray-300">(généré par IA)</em>
                         </h2>
                         <div className="bg-gray-50 border-l-4 border-blue-500 p-4 rounded-md shadow-sm text-gray-700">
-                            <p className="leading-relaxed text-md">{book.summary}</p>
+                            <p className="leading-relaxed text-md text-justify">{book.summary}</p>
                         </div>
                     </div>
                     {error && (
