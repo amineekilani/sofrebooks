@@ -19,12 +19,14 @@ SofreBooks is a simple web application that enables employees to share and borro
 SofreBooks is designed to facilitate book sharing among employees in an organization. Each employee can maintain a personal list of books they own, request books from colleagues, and track their borrowing history. The app features real-time updates for borrowing requests and the ability to manage the book-sharing process smoothly.
 
 ## Features
-- **Book Search**: Employees can search for books by title or author.
+- **Book CRUD**: Users can create, read, update, and delete books in the system.
+- **Book Search**: Users can search for books by title or author.
 - **Book Details**: Each book has a detailed page with relevant information.
-- **Borrowing Requests**: Employees can request to borrow a book if it is not currently on loan.
+- **Borrowing Requests**: Users can request to borrow a book if it is not currently on loan.
 - **Request Management**: Book owners can accept or decline borrowing requests.
-- **Loan History**: Employees can view the history of books they have borrowed or lent.
+- **Loan History**: Users can view the history of books they have borrowed or lent.
 - **File Export:** Allows users to export a list of books or their borrowing history as an Excel file for easy offline access.
+- **Statistics Consultation:** Users can view various statistics related to books.
 
 ## Technologies Used
 - **Frontend**: React.js, Tailwind CSS
