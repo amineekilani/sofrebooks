@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import * as XLSX from "xlsx";
+import ExcelJS from "exceljs";
 import { addBook, updateBook, deleteBook, getBooksByUser, BookCategory } from "../services/BookService";
 import Navbar from "./Navbar";
 import { AuthContext } from "../context/AuthContext";
@@ -103,25 +103,46 @@ const MyBooks=()=>
         setNewBook({ title: book.title, author: book.author, category: book.category, isbn: book.isbn, publisher: book.publisher, publicationYear: book.publicationYear });
         setShowForm(true);
     };
-    const handleExportXLSX=()=>
+    const handleExportXLSX=async()=>
     {
         if (books.length===0)
         {
             alert("Aucun livre à exporter.");
             return;
         }
-        const worksheet=XLSX.utils.json_to_sheet(books.map(book=>
-        ({
-            "Titre": book.title,
-            "Auteur": book.author,
-            "Catégorie": book.category,
-            "ISBN": book.isbn,
-            "Maison d'édition": book.publisher,
-            "Année de publication": book.publicationYear
-        })));
-        const workbook=XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Mes Livres");
-        XLSX.writeFile(workbook, "Mes Livres.xlsx");
+        const workbook=new ExcelJS.Workbook();
+        const worksheet=workbook.addWorksheet("Mes Livres");
+        worksheet.columns=
+        [
+            { header: "Titre", key: "title", width: 25 },
+            { header: "Auteur", key: "author", width: 20 },
+            { header: "Catégorie", key: "category", width: 15 },
+            { header: "ISBN", key: "isbn", width: 20 },
+            { header: "Maison d'édition", key: "publisher", width: 25 },
+            { header: "Année de publication", key: "publicationYear", width: 20 }
+        ];
+        books.forEach(book=>
+            {
+                worksheet.addRow(
+                    {
+                        title: book.title,
+                        author: book.author,
+                        category: book.category,
+                        isbn: book.isbn,
+                        publisher: book.publisher,
+                        publicationYear: book.publicationYear
+                    }
+                );
+            }
+        );
+        const buffer=await workbook.xlsx.writeBuffer();
+        const blob=new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+        const url=window.URL.createObjectURL(blob);
+        const a=document.createElement("a");
+        a.href=url;
+        a.download="Mes_Livres.xlsx";
+        a.click();
+        window.URL.revokeObjectURL(url);
     };
     return (
         <div className="flex min-h-screen">
